@@ -1,0 +1,19 @@
+{
+  "name": "new_api_c",
+  "version": "1.0.0",
+  "description": "--- 개발 순서",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kobea-dev/new_api_c.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kobea-dev/new_api_c/issues"
+  },
+  "homepage": "https://github.com/kobea-dev/new_api_c#readme"
+}
