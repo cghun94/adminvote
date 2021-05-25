@@ -22,6 +22,11 @@ app.set('view engine', 'ejs');
 // __dirname 서버의 폴더 경로와 요청 경로가 다르므로 외부인이 서버의 구조를 쉽게 파악할 수 없다. 
 app.use(express.static(__dirname + '/public'));
 
+// 404를 잡고 오류 처리
+app.use(function(req, res, next) {
+    next(createError(404));
+});
+
 app.use('/',indexRouter);
 
 module.exports = app;
