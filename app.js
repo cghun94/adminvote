@@ -1,4 +1,4 @@
-const createError = require('http-errors');
+
 const express = require('express');
 const app = express();
 const logger = require('morgan');
@@ -23,9 +23,10 @@ app.set('view engine', 'ejs');
 app.use(express.static(__dirname + '/public'));
 
 // 404를 잡고 오류 처리
-app.use(function(req, res, next) {
-    next(createError(404));
-});
+// const createError = require('http-errors');
+// app.use(function(req, res, next) {
+//     next(createError(404));
+// });
 
 app.use('/',indexRouter);
 
