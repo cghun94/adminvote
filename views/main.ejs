@@ -1,1 +1,34 @@
-메인페이지
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+
+    <body>
+        <script>
+            axios({        
+                        method: 'post',
+                        url: '/login',        
+                        data: {        
+                            token     
+                        }        
+                })
+                .then(function (response) {        
+                    console.log(response);        
+                })        
+                .catch(function (error) {
+                    console.log(error);        
+                }); 
+        </script>
+        <div id="wrap">
+            
+            <span class="title">메인 페이지!</span>
+
+               
+                
+        </div>
+        
+    </body>
+</html>

@@ -10,7 +10,7 @@ var indexRouter = require('./routes/index');
 app.use(logger('dev'));
 //json request body 파싱 
 app.use(express.json());
-app.use(express.urlencoded( {extended : false } ));
+app.use(express.urlencoded( {extended : true } ));
 
 
 
