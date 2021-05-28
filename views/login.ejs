@@ -12,14 +12,14 @@
 
             <span class="title">로그인 페이지!</span>
 
-                <form action="/main" method="GET">
-                    
+                <!-- <form action="/main" method="GET"> -->
+                
                     <label for="id">아이디</label>
                     <input id="id" type="id" required />
                     <label for="password">비밀번호</label>
                     <input id="password" type="password" required />
                     <button class="login100" onclick="login_click();">로그인</button>
-                </form>           
+                <!-- </form>       -->
                 
         </div>
         <script>
@@ -35,12 +35,17 @@
                             id: id,        
                             password: password        
                         }        
-                })
-                .then(function (response) {       
-                    console.log('1',response);        
-                    res.send({data});
-                })        
-                .catch(function (error) {
+                }).then( (res)=> {       
+                    console.log('login.ejs : response = ',res); // 크롬 콘솔창 확인
+                    // console.log('res.data = ', res.data);
+                    console.log('res.data.result = ', res.data.result);
+                    if(res.data.result === true){
+                        console.log('res.data.result = true ');
+                        
+                    }else{
+                        console.log('res.data.result = false ');
+                    }
+                }).catch( (error)=> {
                     console.log(error);        
                 });        
             }        
