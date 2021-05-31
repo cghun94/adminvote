@@ -6,9 +6,11 @@ const mysqlConn = mysqlconfig.init();
 mysqlconfig.open(mysqlConn); //연결 확인 successful.
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
+const axios = require('axios');
 
 const jwt = require('jsonwebtoken');
 const controller = require('./token');
+
 
 
 // let saltRounds = Number(process.env.saltRounds);//salt 를 만들기 위해 몇번 돌릴지 정했다
@@ -26,13 +28,24 @@ router.get('/', function (req, res) {
     res.render('index');
 });
 
-router.get('/login', function (req, res) {
-    console.log('get 로그인 ');
-    // console.log('get 로그인 = ', req.body);
-    res.render('login');
+router.get('/loginpage', async(req, res,next)=> {
+    console.log('get loginpage req로그인 ' );
+    
+    // res.render('loginpage');
 });//get login end
 
-router.post('/login', async(req, res,bodyParser)=> {
+router.get('/login', verifyToken, function (req, res) {
+    console.log('get 로그인 ');
+    jwt.verify(req.token ,SECRET_KEY , (err, Data)=> {
+        if(err){
+            res.sendStatus(403);
+        }else{
+            res.json({ message : '토큰 로그인 성공' , Data});
+        }
+    });
+});//get login end
+
+router.post('/login', async(req, res)=> {
     
     // console.log('req == ', req);
     // console.log('1body.id = ',req);
@@ -69,11 +82,7 @@ router.post('/login', async(req, res,bodyParser)=> {
                         expiresIn: '1m', // 만료시간 5분
                     });
                     console.log('jwtoken' , accessToken)    
-                    // res.cookie('json', {id : token});
-                    // res.cookie('id', token);
-                    // req.session.valid = true;
-                    // res.redirect('/main');
-                                        
+                        
 
                     res.status(200).json({result : true , Token : accessToken});
                     
@@ -89,15 +98,29 @@ router.post('/login', async(req, res,bodyParser)=> {
     
 });//router.post end
 
-router.get('/main', function (req, res,next) {
-    console.log('get main  로그인');
-    // console.log('get main  req', req);
-    // console.log('req ==', req.headers);
-    // console.log('req ==', req.headers.cookie.split(' '));
-    // let cooki = req.headers.cookie.split(' ');
-    // console.log('len' ,cooki.length );
-    // for(let i = )
+router.get('/main', function (req, res) {
+    console.log('get main  로그인' , res);
+    
+
     res.render('main');
 });//get main end
+
+//jwt 토큰 확인 함수
+function verifyToken(req, res, next){
+    //헤더값이므로 토큰을 보낼떄 헤더로 보내야한다
+    const bearerHeader = req.headers['authorization'];
+
+    if(typeof bearerHeader !== 'undefined'){
+        const bearer = bearerHeader.split(' ');
+        const bearerToken = bearer[1];
+        
+        req.token = bearerToken;
+        // 다음 미들웨어 실행
+        next();
+    }else{
+        res.sendStatus(403);
+    }
+}
+
 
 module.exports = router;
