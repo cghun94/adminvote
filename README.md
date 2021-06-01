@@ -10,34 +10,25 @@ express (완료)
 
 db커넥션 (완료)
 
-암호화 bcrypt
+암호화 bcrypt(완료)
 
 세션 JWT
 
 ---
 
+Nodejs                 v10.19.0
+Express                v4.17.1
+Dotenv                 v10.0.0
+Mysql                  v2.18.1
+Morgan                 v1.10.0
+Nodenom                v2.0.7
+Ejs                    v3.1.6
+Body-parser            v1.19.0
+Bcrypt          	     v5.0.1
+jsonwebtoken           v8.5.1
+axios                  v0.21.1
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+---
 
 ## 목차
 ### 1.관리자 로그인

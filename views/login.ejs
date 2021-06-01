@@ -8,7 +8,7 @@
 
     <body>
         <script>
-            console.log('document' , document);
+            // console.log('document' , document);
             
         </script>
         <div id="wrap">
@@ -33,7 +33,7 @@
         
                 axios({        
                         method: 'post',
-                        url: '/login',        
+                        url: '/token',        
                         data: {        
                             id: id,        
                             password: password        
@@ -42,13 +42,12 @@
                     console.log('login.ejs : response = ',res); // 크롬 콘솔창 확인
                     // console.log('res.data = ', res.data);
                     // console.log('res.data.result = ', res.data.result);
-                    if(res.data.result === true){
+                    if(res.data.token){
                         console.log('res.data.result = true ');
                         console.log('res.data.Token =  ',res.data.Token);
-                        self.Token = res.data.Token;
-                        
+                                                
                     }else{
-                        console.log('res.data.result = false ');
+                        console.log('res.data.token = x ');
                     }
                 }).catch( (error)=> {
                     console.log(error);        
