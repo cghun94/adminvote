@@ -17,10 +17,10 @@ const cookie = require('cookie');
 // const salt = bcrypt.genSaltSync(saltRounds); //salt 만들기
 
 const salt = process.env.salt;  //만든 salt 저장하고 불러오기
-console.log('salt : ' ,salt )
+// console.log('salt : ' ,salt )
 // jwt 시크릿키
 const SECRET_KEY  = process.env.SECRET_KEY;
-console.log('SECRET_KEY  : ', SECRET_KEY );
+// console.log('SECRET_KEY  : ', SECRET_KEY );
 
 
 router.get('/', async (req, res ,next) => {
@@ -64,17 +64,11 @@ router.post('/login', async(req ,res) =>{
                                 }
                             );
         
-                            const refreshToken = jwt.sign(
-                                {id :db[0].id},
-                                process.env.REFRESH_SECRET,
-                                {
-                                expiresIn: "1m",
-                                }
-                            );
-                            let second = 1000;
-                            console.log(4 * second);
+                            
+                            let second = 1000; //쿠키 만료시간 초
+
                             res
-                            .cookie("refreshToken", refreshToken ,{maxAge: 5 *second })
+                            .cookie("accessToken", accessToken ,{maxAge: 5 *second })
                             .status(200)
                             .json({token: accessToken })
                                                        
@@ -95,38 +89,45 @@ router.post('/login', async(req ,res) =>{
 const checkToken = (token, res, next) => {
     
     if(token === undefined){
-        return res.status(401).send('error is not present')
+        return res.status(401).send('토큰없음')
     }
     
     if(token){
-        jwt.verify(token,SECRET_KEY , (err , decoded) => {
-            if(err){
-                return res.json({
-                    success:  false,
-                    message : '토큰이 유효하지 않음'
-                });
-            }
-            else{
-                    resdecoded = decoded;
-                    next();
+        const decoded = jwt.verify(token, SECRET_KEY);
+
+        if(decoded){
+            console.log(decoded)
+            const refreshToken = jwt.sign(
+                {id :decoded.id},
+                process.env.REFRESH_SECRET,
+                {
+                expiresIn: "1m",
+                }
                 
-            }
-        });
+            );
+            let second = 1000; //쿠키 만료시간 초
+            console.log('refreshToken = ',refreshToken);
+            res
+            .cookie("accessToken", refreshToken ,{maxAge: 10 *second })
+        }
     }
     else{
         return res.json({
             success:  false,
-            message : '토큰없음'
+            message : '토큰 검증 실패'
         });
     }
 }
 
-router.get('/main' , (req, res)=> {
+router.get('/main' , (req, res,next)=> {
     if(req.headers.cookie){
         let cookies_token = cookie.parse(req.headers.cookie);
-        cookies_token = cookies_token.refreshToken;
+        cookies_token = cookies_token.accessToken;
         console.log('메인겟' , cookies_token);
 
+        checkToken(cookies_token,res,req);
+
+        res.render('main');
     }
     else{
         res.redirect('/');
@@ -134,7 +135,7 @@ router.get('/main' , (req, res)=> {
     
     
     
-    res.render('main');
+    
 });  
 
 
