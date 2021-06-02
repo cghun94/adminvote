@@ -13,6 +13,8 @@ db커넥션 (완료)
 암호화 bcrypt(완료)
 
 세션 JWT
+token 저장 ( cookie , localStorage)
+token 검증하여 만료시간 재설정 , 재발급
 
 ---
 
@@ -27,6 +29,7 @@ Body-parser            v1.19.0
 Bcrypt          	     v5.0.1
 jsonwebtoken           v8.5.1
 axios                  v0.21.1
+cookie                 v0.4.1
 
 ---
 
