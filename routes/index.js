@@ -8,9 +8,9 @@ const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const axios = require('axios');
 const passport = require('passport');
-const jwt = require('jsonwebtoken');
 const session = require('express-session');
 const cookie = require('cookie');
+const jwt_token= require('./token');
 
 // let saltRounds = Number(process.env.saltRounds);//salt 를 만들기 위해 몇번 돌릴지 정했다
 // console.log('saltRounds = ', saltRounds); //몇번돌렸는지 확인
@@ -18,25 +18,24 @@ const cookie = require('cookie');
 
 const salt = process.env.salt;  //만든 salt 저장하고 불러오기
 // console.log('salt : ' ,salt )
-// jwt 시크릿키
-const SECRET_KEY  = process.env.SECRET_KEY;
-// console.log('SECRET_KEY  : ', SECRET_KEY );
+
 
 
 router.get('/', async (req, res ,next) => {
-    // console.log(req.headers);
-    try{
-            res.render('login', {
-                
-            });
-    }catch (err) {
-        console.error(err);
-        next(err);
+    if(req.headers.cookie){
+        jwt_token.checkToken(req,res,req);
+        try{
+            res.redirect('/main');
+        }catch (err) {
+            console.error(err);
+            next(err);
+        }
     }
+    else{
+        res.render('login');
+    }
+    
 });
-
-// router.get('/access', jwttoken.accessToken);
-// router.get('/refresh', jwttoken.refreshToken);
 
 
 router.post('/login', async(req ,res) =>{
@@ -51,26 +50,16 @@ router.post('/login', async(req ,res) =>{
                     message : '로그인 실패 아이디 없음'
                 });
             }//if end
-            else{
-                
+            else{                
                 if(body_hashpw === db[0].pw ){
                     console.log('비번 ok , 로그인 성공');
-                    
-                            const accessToken = jwt.sign(
-                                {id: db[0].id},
-                                process.env.ACCESS_SECRET,
-                                {
-                                expiresIn: "1m",
-                                }
-                            );
-        
-                            
-                            let second = 1000; //쿠키 만료시간 초
+                    const accessToken = jwt_token.login( db[0].id ,res);
+                    // console.log('비번 ok , 로그인 성공2',accessToken);
+                    let second = 1000; //쿠키 만료시간 초
 
-                            res
-                            .cookie("accessToken", accessToken ,{maxAge: 5 *second })
-                            .status(200)
-                            .json({token: accessToken })
+                    res.cookie("accessToken", accessToken ,{maxAge: 5 *second })
+                    .status(200)
+                    .send({accessToken: accessToken })
                                                        
                                 
                 }//if end
@@ -86,62 +75,25 @@ router.post('/login', async(req ,res) =>{
     
 }); //login end
 
-const checkToken = (token, res, next) => {
-    
-    if(token === undefined){
-        return res.status(401).send('토큰없음')
-    }
-    
-    if(token){
-        const decoded = jwt.verify(token, SECRET_KEY);
-
-        if(decoded){
-            console.log(decoded)
-            const refreshToken = jwt.sign(
-                {id :decoded.id},
-                process.env.REFRESH_SECRET,
-                {
-                expiresIn: "1m",
-                }
-                
-            );
-            let second = 1000; //쿠키 만료시간 초
-            console.log('refreshToken = ',refreshToken);
-            res
-            .cookie("accessToken", refreshToken ,{maxAge: 10 *second })
-        }
-    }
-    else{
-        return res.json({
-            success:  false,
-            message : '토큰 검증 실패'
-        });
-    }
-}
-
 router.get('/main' , (req, res,next)=> {
     if(req.headers.cookie){
-        let cookies_token = cookie.parse(req.headers.cookie);
-        cookies_token = cookies_token.accessToken;
-        console.log('메인겟' , cookies_token);
-
-        checkToken(cookies_token,res,req);
-
-        res.render('main');
+        let refreshToken = jwt_token.checkToken(req,res);
+        let second = 1000; //쿠키 만료시간 초
+            // console.log('재발급 = ',refreshToken);
+        res.cookie("accessToken", refreshToken ,{maxAge: 100 *second })
+        .status(200)
+        .render('main');
     }
     else{
         res.redirect('/');
-    }
-    
-    
-    
-    
-});  
+    }   
+});
 
-
-router.post('/main' , checkToken , (req, res)=> {
-    console.log(req.headers);
-    // jwt.verify(req.token)
-    res.render('main');
-});  
+router.post('/logout', async(req,res)=>{
+    console.log('로그아웃1')
+    if(req.headers.cookie === undefined){
+        return res.status(401).send('토큰없음')
+    }    
+    jwt_token.logout(req,res);
+});
 module.exports = router;
