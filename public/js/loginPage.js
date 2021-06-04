@@ -14,7 +14,7 @@ function login_click(){
         if(res.data.accessToken){
             // localStorage.setItem("accessToken",res.data.accessToken)
             // let accessToken = localStorage.getItem("accessToken");                                                
-            location.href='/main' ;                    
+            location.href='/main';                    
         }
         else{
             // console.log('res.data.accessToken 토큰 없음');
