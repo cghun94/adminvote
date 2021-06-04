@@ -41,59 +41,35 @@ router.post('/login', async(req ,res) =>{
     try{
         const {id , password } = req.body;
         const body_hashpw =  bcrypt.hashSync(req.body.password, salt);
-        if(process.env.admin_id === req.body.id ){
-            console.log('아이디 존재');
-            if(body_hashpw === process.env.admin_pw ){
-                console.log('비번 ok , 로그인 성공');
-                const accessToken = jwt_token.login( process.env.admin_id ,res);
-                // console.log('비번 ok , 로그인 성공2',accessToken);
-                let second = 1000; //쿠키 만료시간 초
-
-                res.cookie("accessToken", accessToken ,{maxAge: 5 *second })
-                .status(200)
-                .send({accessToken: accessToken })
-                                                   
-                            
-            }//if end
-            else{
-                res.status(401).send({
-                    result : 'pw false',
-                    message : '비밀번호 틀림'
+        mysqlConn.query(`SELECT * FROM users where id = ?` , [req.body.id] ,function (err, db, fields) {
+            if(db.length === 0 ){
+                console.log('로그인 실패 아이디 없음');
+                res.status(400).send({
+                    result : 'id false',
+                    message : '아이디 없음'
                 });
-            }
-        }// if id
+            }//if end
+            else{                
+                if(body_hashpw === db[0].pw ){
+                    console.log('비번 ok , 로그인 성공');
+                    const accessToken = jwt_token.login( db[0].id ,res);
+                    // console.log('비번 ok , 로그인 성공2',accessToken);
+                    let second = 1000; //쿠키 만료시간 초
 
-        ////////mysql 문
-        // mysqlConn.query(`SELECT * FROM users where id = ?` , [req.body.id] ,function (err, db, fields) {
-        //     if(db.length === 0 ){
-        //         console.log('로그인 실패 아이디 없음');
-        //         res.status(400).send({
-        //             result : 'id false',
-        //             message : '아이디 없음'
-        //         });
-        //     }//if end
-        //     else{                
-        //         if(body_hashpw === db[0].pw ){
-        //             console.log('비번 ok , 로그인 성공');
-        //             const accessToken = jwt_token.login( db[0].id ,res);
-        //             // console.log('비번 ok , 로그인 성공2',accessToken);
-        //             let second = 1000; //쿠키 만료시간 초
-
-        //             res.cookie("accessToken", accessToken ,{maxAge: 5 *second })
-        //             .status(200)
-        //             .send({accessToken: accessToken })
+                    res.cookie("accessToken", accessToken ,{maxAge: 5 *second })
+                    .status(200)
+                    .send({accessToken: accessToken })
                                                        
                                 
-        //         }//if end
-        //         else{
-        //             res.status(401).send({
-        //                 result : 'pw false',
-        //                 message : '비밀번호 틀림'
-        //             });
-        //         }
-        //     }
-        // });//mysql end
-        
+                }//if end
+                else{
+                    res.status(401).send({
+                        result : 'pw false',
+                        message : '비밀번호 틀림'
+                    });
+                }
+            }
+        });//mysql end
     }catch(error){
         console.log(error);
     }//try catch end

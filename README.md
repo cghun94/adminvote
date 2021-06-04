@@ -56,6 +56,32 @@ Ubuntu 20.04.1 LTS + Node.js 10.19 환경에서 작성되었습니다.
 > bootstrap              ^5.0.1<br>
 
 
+### database schema
+```sql
+
+CREATE TABLE users(
+  idx int NOT NULL AUTO_INCREMENT primary key,
+  id char(20) NOT NULL ,
+  name varchar(100) ,
+  pw varchar(255) 
+);
+
+```
+mysql> desc users;
++-------+--------------+------+-----+---------+----------------+
+| Field | Type         | Null | Key | Default | Extra          |
++-------+--------------+------+-----+---------+----------------+
+| idx   | int          | NO   | PRI | NULL    | auto_increment |
+| id    | char(20)     | NO   |     | NULL    |                |
+| name  | varchar(100) | YES  |     | NULL    |                |
+| pw    | varchar(255) | YES  |     | NULL    |                |
++-------+--------------+------+-----+---------+----------------+
+
+
+```
+
+
+
 ---
 ## 목차
 ### 1.관리자 로그인
