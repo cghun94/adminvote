@@ -67,6 +67,8 @@ CREATE TABLE users(
 );
 
 ```
+
+```
 mysql> desc users;
 +-------+--------------+------+-----+---------+----------------+
 | Field | Type         | Null | Key | Default | Extra          |
