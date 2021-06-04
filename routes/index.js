@@ -19,8 +19,6 @@ const jwt_token= require('./token');
 const salt = process.env.salt;  //만든 salt 저장하고 불러오기
 // console.log('salt : ' ,salt )
 
-
-
 router.get('/', async (req, res ,next) => {
     if(req.headers.cookie){
         jwt_token.checkToken(req,res,req);
@@ -29,6 +27,7 @@ router.get('/', async (req, res ,next) => {
         }catch (err) {
             console.error(err);
             next(err);
+            res.render('login');
         }
     }
     else{
@@ -46,8 +45,8 @@ router.post('/login', async(req ,res) =>{
             if(db.length === 0 ){
                 console.log('로그인 실패 아이디 없음');
                 res.status(400).send({
-                    code : 400,
-                    message : '로그인 실패 아이디 없음'
+                    result : 'id false',
+                    message : '아이디 없음'
                 });
             }//if end
             else{                
@@ -64,7 +63,10 @@ router.post('/login', async(req ,res) =>{
                                 
                 }//if end
                 else{
-                    res.status(400).send('비밀번호 틀림');
+                    res.status(401).send({
+                        result : 'pw false',
+                        message : '비밀번호 틀림'
+                    });
                 }
             }
         });//mysql end
@@ -95,5 +97,19 @@ router.post('/logout', async(req,res)=>{
         return res.status(401).send('토큰없음')
     }    
     jwt_token.logout(req,res);
+});
+
+router.get('/userlist' , (req, res,next)=> {
+    if(req.headers.cookie){
+        let refreshToken = jwt_token.checkToken(req,res);
+        let second = 1000; //쿠키 만료시간 초
+            // console.log('재발급 = ',refreshToken);
+        res.cookie("accessToken", refreshToken ,{maxAge: 100 *second })
+        .status(200)
+        .render('userlist');
+    }
+    else{
+        res.redirect('/');
+    }   
 });
 module.exports = router;

@@ -23,8 +23,10 @@ app.set('view engine', 'ejs');
 //__dirname 현재 기본경로에 + /public  = /admin/new_api_c/public
 // __dirname 서버의 폴더 경로와 요청 경로가 다르므로 외부인이 서버의 구조를 쉽게 파악할 수 없다. 
 app.use('/public',express.static('public'));
-app.use(function(req, res, next) {
+app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS
+app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
 
+app.use(function(req, res, next) {
     //모든 도메인의 요청을 허용하지 않으면 웹브라우저에서 CORS 에러를 발생시킨다.
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');

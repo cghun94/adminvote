@@ -2,15 +2,15 @@
 ---
 개발 순서
 
-VM 우분투 리눅스 설치 (완료)                                      
-vscode에서 remote development (완료)
-리눅스에 mysql 구축 (완료)
+VM 우분투 리눅스 설치                                      
+vscode에서 remote development
+리눅스에 mysql 구축
 
-express (완료)
+express 
 
-db커넥션 (완료)
+db커넥션 
 
-암호화 bcrypt(완료)
+암호화 bcrypt
 
 세션 JWT
 token 저장 ( cookie , localStorage)
@@ -18,21 +18,53 @@ token 검증하여 만료시간 재설정 , 재발급
 
 ---
 
-Nodejs                 v10.19.0
-Express                v4.17.1
-Dotenv                 v10.0.0
-Mysql                  v2.18.1
-Morgan                 v1.10.0
-Nodenom                v2.0.7
-Ejs                    v3.1.6
-Body-parser            v1.19.0
-Bcrypt          	     v5.0.1
-jsonwebtoken           v8.5.1
-axios                  v0.21.1
-cookie                 v0.4.1
+Nodejs                 v10.19.0<br>
+Express                v4.17.1<br>
+Dotenv                 v10.0.0<br>
+Mysql                  v2.18.1<br>
+Morgan                 v1.10.0<br>
+Nodenom                v2.0.7<br>
+Ejs                    v3.1.6<br>
+Body-parser            v1.19.0<br>
+Bcrypt          	     v5.0.1<br>
+jsonwebtoken           v8.5.1<br>
+axios                  v0.21.1<br>
+cookie                 v0.4.1<br>
 
 ---
 
+### express 
+1. 
+작업 디렉토리 생성 <br>
+```
+mkdir admin
+```
+admin 풀더 생성 후 admin 하위에 .env 파일 생성
+그리고 날짜 풀더 생성
+```
+mkdir 0601 //6월1일 
+```
+
+그리고 clone 을 받는다
+```
+git clone https://github.com/kobea-dev/new_api_c.git
+```
+PWD : /admin/0601/new_api_c/
+
+2.
+`npm init` 을 통행 `package.json` 생성.
+
+3.
+`app.js` 파일을 생성
+
+4.
+```
+npm install express
+```
+> express 패키지를 설치  `package.json` 에 추가된것을 확인
+> 
+
+---
 ## 목차
 ### 1.관리자 로그인
 ### 2.관리자 메인페이지

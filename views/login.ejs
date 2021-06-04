@@ -2,53 +2,38 @@
 <head>
     <meta charset="UTF-8">
     <title>로그인페이지</title>
+    <link rel="stylesheet" type="text/css" href="../public/css/loginPage.css">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    
+    <script src="../public/js/loginPage.js"></script>
 </head>
-
-    <body>
-        <div id="wrap">
-
-            <span class="title">로그인 페이지!</span>
-            <br>
-                
-                    <label for="id">아이디</label>
-                    <input id="id" type="id" required />
-                    <label for="password">비밀번호</label>
-                    <input id="password" type="password" required />
-                    <button class="login100" onclick="login_click();">로그인</button>
-                    <!-- <button id="login200" onclick="login_click2()">로그인2</button> -->
-          
-               
-                <script>
-                    function login_click(){
-                        const id = $("#id").val();
-                        const password =  $("#password").val();        
-                        axios({        
-                                method: 'post',
-                                url: '/login',        
-                                data: {        
-                                    id: id,        
-                                    password: password        
-                                }        
-                        }).then( (res)=> {       
-                            console.log('res.data = ', res);                                
-                            if(res.data.accessToken){
-                                // localStorage.setItem("accessToken",res.data.accessToken)
-                                // let accessToken = localStorage.getItem("accessToken");                                                
-                                location.href='http://192.168.33.111:3000/main' ;                    
-                            }else{
-                                // console.log('res.data.token = x ');
-                                
-                            }
-                        }).catch( (error)=> {
-                            console.log(error);        
-                        });        
-                    }
-                </script>
-        </div>      
+    
+<body cellpadding="0" cellspacing="0" marginleft="0" margintop="0" width="100%" height="100%" >
+        <!-- <div>
+            <label for="id">아이디</label>
+            <input id="id" type="id" required />
+            <label for="password">비밀번호</label>
+            <input id="password" type="password" required />
+            <button class="login100" onclick="login_click();">로그인</button>
+        </div> -->
+        <body width="100%" height="100%">
+            <div class="loginForm">
+                <h2>Login</h2>
+                    <div class="idForm">
+                        <input type="text" id="id" class="id" placeholder="ID">
+                    </div>
+                <div class="passForm">
+                    <input type="password" id="password" class="pw" placeholder="PW">
+                </div>
+                <button type="button" class="btn" onclick="login_click();">
+                    LOG IN
+                </button>
+                <div class="bottomText">
+                    <label id="result" class="bottomText"></label>
+                </div>
+            </div>
         
         
     </body>
+    
 </html>
