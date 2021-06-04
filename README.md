@@ -17,52 +17,44 @@ token 저장 ( cookie , localStorage)
 token 검증하여 만료시간 재설정 , 재발급
 
 ---
+## 시작하기
 
-Nodejs                 v10.19.0<br>
-Express                v4.17.1<br>
-Dotenv                 v10.0.0<br>
-Mysql                  v2.18.1<br>
-Morgan                 v1.10.0<br>
-Nodenom                v2.0.7<br>
-Ejs                    v3.1.6<br>
-Body-parser            v1.19.0<br>
-Bcrypt          	     v5.0.1<br>
-jsonwebtoken           v8.5.1<br>
-axios                  v0.21.1<br>
-cookie                 v0.4.1<br>
+Ubuntu 20.04.1 LTS + Node.js 10.19 환경에서 작성되었습니다.
 
----
+### 설치하기
 
-### express 
-1. 
-작업 디렉토리 생성 <br>
-```
-mkdir admin
-```
-admin 풀더 생성 후 admin 하위에 .env 파일 생성
-그리고 날짜 풀더 생성
-```
-mkdir 0601 //6월1일 
-```
+- `nodejs` 와 `npm` 을 설치합니다.
+- Node.js 10.19 LTS 버전을 설치합니다.
+- 실행에 필요한 의존성을 설치합니다.
 
-그리고 clone 을 받는다
 ```
-git clone https://github.com/kobea-dev/new_api_c.git
+  npm install
 ```
-PWD : /admin/0601/new_api_c/
+ ### 실행하기
 
-2.
-`npm init` 을 통행 `package.json` 생성.
-
-3.
-`app.js` 파일을 생성
-
-4.
 ```
-npm install express
+  npm start
 ```
-> express 패키지를 설치  `package.json` 에 추가된것을 확인
-> 
+- `localhost:3000`으로 접속이 가능합니다 
+- port 수정시 env파일에서 설정 하거나 bin/www.js 에서 port 설정
+
+
+### 사용된 도구
+
+> Nodejs                 v10.19.0<br>
+> Express                v4.17.1<br>
+> Dotenv                 v10.0.0<br>
+> Mysql                  v2.18.1<br>
+> Morgan                 v1.10.0<br>
+> Nodenom                v2.0.7<br>
+> Ejs                    v3.1.6<br>
+> Body-parser            v1.19.0<br>
+> Bcrypt          	     v5.0.1<br>
+> jsonwebtoken           v8.5.1<br>
+> axios                  v0.21.1<br>
+> cookie                 v0.4.1<br>
+> bootstrap              ^5.0.1<br>
+
 
 ---
 ## 목차

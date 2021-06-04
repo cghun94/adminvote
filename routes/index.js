@@ -74,7 +74,6 @@ router.post('/login', async(req ,res) =>{
         console.log(error);
     }//try catch end
     
-    
 }); //login end
 
 router.get('/main' , (req, res,next)=> {

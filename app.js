@@ -23,7 +23,7 @@ app.set('view engine', 'ejs');
 //__dirname 현재 기본경로에 + /public  = /admin/new_api_c/public
 // __dirname 서버의 폴더 경로와 요청 경로가 다르므로 외부인이 서버의 구조를 쉽게 파악할 수 없다. 
 app.use('/public',express.static('public'));
-app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect CSS
+app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); // redirect bootstrap CSS
 app.use('/js', express.static(__dirname + '/node_modules/bootstrap/dist/js')); // redirect bootstrap JS
 
 app.use(function(req, res, next) {
