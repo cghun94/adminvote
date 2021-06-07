@@ -16,10 +16,7 @@ module.exports = {
 
     checkToken : (req, res ) => {
         if(req.headers.cookie === undefined){
-          return res.status(401).send({
-            success:  false,
-            message : '토큰 없음'
-        });
+          return res.status(401).render('/');
         }
     
         if(req.headers.cookie){

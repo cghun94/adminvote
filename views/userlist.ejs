@@ -2,22 +2,63 @@
 <head>
     <meta charset="UTF-8">
     <title>유저리스트</title>
+    <link rel="stylesheet" type="text/css" href="../public/css/userlist.css">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="../public/js/mainPage.js"></script>
 </head>
     <%- include ('./header')%>
+    
+    <script>
+        $(document).ready(function(){
+            function dbData(){
+                //내용물 제거
+                $('#output').empty();
+                // let firstoutput = "";
+                // firstoutput += '<tr>';
+                //     firstoutput += '<colgroup span="4" ></colgroup>'
+                //     firstoutput += ' <td>' + 'Idx' + '</td>';
+                //     firstoutput += ' <td>' + 'Id' + '</td>';
+                //     firstoutput += ' <td>' + 'Name' + '</td>';
+                //     firstoutput += ' <td>' + "    " + '</td>';
+                //     firstoutput += ' <td>' + 'Created_at' + '</td>';
+                // firstoutput += '</tr>';
+                // $('#output').append(firstoutput);
+                //ajax 수행
+                $.post('/userlist' , function(db){
+                    $(db).each(function(index , item ){
+                        let output='';
+                        console.log(item);
+                        output += '<tr>';
+                            output += ' <td>' + item.idx + '</td>';
+                            output += ' <td>' + item.id + '</td>';
+                            output += ' <td>' + item.name + '</td>';
+                            output += ' <td>' + item.created_at + '</td>';
+                        output += '</tr>';
+                        $('#output').append(output); 
+                    });
+                });
+            }//function dbData
+            dbData();
+        });
+    </script>
+
     <body>
-        <div id="wrap">          
-        유저리스트
-               
-                
-        </div>
-        
-        <script>
-            
-             
-        </script>
+
+        <table border="3">
+            <thead>
+                <tr>
+                    <td width = "50px" >Idx</td>
+                    <td width = "100px">Id</td>
+                    <td width = "100px">Name</td>
+                    <td>Created</td>
+                </tr>
+            </thead>       
+            <tbody id="output">
+
+            </tbody>
+        </table>
+
     </body>
 </html>
 

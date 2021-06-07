@@ -7,7 +7,6 @@ mysqlconfig.open(mysqlConn); //연결 확인 successful.
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
 const axios = require('axios');
-const passport = require('passport');
 const session = require('express-session');
 const cookie = require('cookie');
 const jwt_token= require('./token');
@@ -41,6 +40,7 @@ router.post('/login', async(req ,res) =>{
     try{
         const {id , password } = req.body;
         const body_hashpw =  bcrypt.hashSync(req.body.password, salt);
+        console.log('비번 해쉬 ', body_hashpw)
         if(process.env.admin_id === req.body.id ){
             console.log('아이디 존재');
             if(body_hashpw === process.env.admin_pw ){
@@ -62,6 +62,13 @@ router.post('/login', async(req ,res) =>{
                 });
             }
         }// if id
+        else{
+            console.log('로그인 실패 아이디 없음');
+                res.status(400).send({
+                    result : 'id false',
+                    message : '아이디 없음'
+                });
+        }
 
         ////////mysql 문
         // mysqlConn.query(`SELECT * FROM users where id = ?` , [req.body.id] ,function (err, db, fields) {
@@ -127,12 +134,68 @@ router.get('/userlist' , (req, res,next)=> {
         let refreshToken = jwt_token.checkToken(req,res);
         let second = 1000; //쿠키 만료시간 초
             // console.log('재발급 = ',refreshToken);
-        res.cookie("accessToken", refreshToken ,{maxAge: 100 *second })
-        .status(200)
-        .render('userlist');
+
+            //
+            mysqlConn.query(`SELECT idx,id,name,created_at FROM users ` ,function (err, db, fields) {
+                console.log(db);
+
+                res.cookie("accessToken", refreshToken ,{maxAge: 100 *second })
+                .status(200)
+                .render('userlist')
+            });
+    
     }
     else{
         res.redirect('/');
     }   
+});
+
+router.post('/userlist' , (req, res,next)=> {
+    if(req.headers.cookie){
+        let refreshToken = jwt_token.checkToken(req,res);
+        let second = 1000; //쿠키 만료시간 초
+            // console.log('재발급 = ',refreshToken);
+
+            //
+            mysqlConn.query(`SELECT idx,id,name,created_at FROM users ` ,function (err, db, fields) {
+                console.log(db);
+
+                res.cookie("accessToken", refreshToken ,{maxAge: 100 *second })
+                .status(200)
+                .json(db)
+            });
+    
+    }
+    else{
+        res.redirect('/');
+    }   
+});
+
+
+router.get('/signup' , (req, res,next)=> {   
+    // let sql = 'INSERT INTO posts (id, name, pw) VALUES (?, ?, ?)';
+    //let param = [req.body.id , req.body.password];
+    res.render('signup')
+});
+router.post('/signup_id' , async(req, res,next)=> {
+       console.log(req.body.id);
+       ////////mysql 문
+       mysqlConn.query(`SELECT * FROM users where id = ?` , [req.body.id] ,function (err, db, fields) {
+           //db에서 아이디가 없다 ? => 가입을 할수있다 , axios로 아이디만 확인
+           if(db.length === 0 ){
+               console.log('아이디 없음');
+               res.status(200).json( {
+                   result : true,
+                   message : '가입 가능한 아이디입니다'
+               })
+           }//if end
+           else{
+            console.log('아이디 있음');
+            res.status(200).json( {
+                result : false,
+                message : '아이디 중복'
+            })
+           }
+       });//mysql end
 });
 module.exports = router;

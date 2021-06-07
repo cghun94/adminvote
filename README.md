@@ -6,7 +6,7 @@ VM 우분투 리눅스 설치
 vscode에서 remote development
 리눅스에 mysql 구축
 
-express 
+express 설치
 
 db커넥션 
 
@@ -19,12 +19,12 @@ token 검증하여 만료시간 재설정 , 재발급
 ---
 ## 시작하기
 
-Ubuntu 20.04.1 LTS + Node.js 10.19 환경에서 작성되었습니다.
+Ubuntu 20.04.1 LTS + Node.js 10.19 + npm 6.14.4 환경에서 작성되었습니다.
 
 ### 설치하기
 
 - `nodejs` 와 `npm` 을 설치합니다.
-- Node.js 10.19 LTS 버전을 설치합니다.
+- Node.js 10.19 LTS 버전을 설치합니다..
 - 실행에 필요한 의존성을 설치합니다.
 
 ```
@@ -39,7 +39,7 @@ Ubuntu 20.04.1 LTS + Node.js 10.19 환경에서 작성되었습니다.
 - port 수정시 env파일에서 설정 하거나 bin/www.js 에서 port 설정
 
 
-### 사용된 도구
+### 프레임워크 환경
 
 > Nodejs                 v10.19.0<br>
 > Express                v4.17.1<br>
@@ -63,21 +63,24 @@ CREATE TABLE users(
   idx int NOT NULL AUTO_INCREMENT primary key,
   id char(20) NOT NULL ,
   name varchar(100) ,
-  pw varchar(255) 
+  pw varchar(255),
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 ```
 
 ```
 mysql> desc users;
-+-------+--------------+------+-----+---------+----------------+
-| Field | Type         | Null | Key | Default | Extra          |
-+-------+--------------+------+-----+---------+----------------+
-| idx   | int          | NO   | PRI | NULL    | auto_increment |
-| id    | char(20)     | NO   |     | NULL    |                |
-| name  | varchar(100) | YES  |     | NULL    |                |
-| pw    | varchar(255) | YES  |     | NULL    |                |
-+-------+--------------+------+-----+---------+----------------+
+
++------------+--------------+------+-----+-------------------+-------------------+
+| Field      | Type         | Null | Key | Default           | Extra             |
++------------+--------------+------+-----+-------------------+-------------------+
+| idx        | int          | NO   | PRI | NULL              | auto_increment    |
+| id         | char(20)     | NO   |     | NULL              |                   |
+| name       | varchar(100) | YES  |     | NULL              |                   |
+| pw         | varchar(255) | YES  |     | NULL              |                   |
+| created_at | datetime     | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
++------------+--------------+------+-----+-------------------+-------------------+
 
 
 ```
