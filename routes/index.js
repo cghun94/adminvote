@@ -19,18 +19,23 @@ const salt = process.env.salt;  //만든 salt 저장하고 불러오기
 // console.log('salt : ' ,salt )
 
 router.get('/', async (req, res ,next) => {
-    if(req.headers.cookie){
-        jwt_token.checkToken(req,res,req);
-        try{
-            res.redirect('/main');
-        }catch (err) {
-            console.error(err);
-            next(err);
+    try{
+        if(req.headers.cookie){
+            jwt_token.checkToken(req,res,req);
+            try{
+                res.redirect('/main');
+            }catch (err) {
+                console.error(err);
+                next(err);
+                res.render('login');
+            }
+        }
+        else{
             res.render('login');
         }
-    }
-    else{
-        res.render('login');
+        
+    }catch(err){
+        console.log(err);
     }
     
 });
@@ -69,37 +74,6 @@ router.post('/login', async(req ,res) =>{
                     message : '아이디 없음'
                 });
         }
-
-        ////////mysql 문
-        // mysqlConn.query(`SELECT * FROM users where id = ?` , [req.body.id] ,function (err, db, fields) {
-        //     if(db.length === 0 ){
-        //         console.log('로그인 실패 아이디 없음');
-        //         res.status(400).send({
-        //             result : 'id false',
-        //             message : '아이디 없음'
-        //         });
-        //     }//if end
-        //     else{                
-        //         if(body_hashpw === db[0].pw ){
-        //             console.log('비번 ok , 로그인 성공');
-        //             const accessToken = jwt_token.login( db[0].id ,res);
-        //             // console.log('비번 ok , 로그인 성공2',accessToken);
-        //             let second = 1000; //쿠키 만료시간 초
-
-        //             res.cookie("accessToken", accessToken ,{maxAge: 5 *second })
-        //             .status(200)
-        //             .send({accessToken: accessToken })
-                                                       
-                                
-        //         }//if end
-        //         else{
-        //             res.status(401).send({
-        //                 result : 'pw false',
-        //                 message : '비밀번호 틀림'
-        //             });
-        //         }
-        //     }
-        // });//mysql end
         
     }catch(error){
         console.log(error);
@@ -112,7 +86,7 @@ router.get('/main' , (req, res,next)=> {
         let refreshToken = jwt_token.checkToken(req,res);
         let second = 1000; //쿠키 만료시간 초
             // console.log('재발급 = ',refreshToken);
-        res.cookie("accessToken", refreshToken ,{maxAge: 100 *second })
+        res.cookie("accessToken", refreshToken ,{maxAge:  2 * 60  *second })
         .status(200)
         .render('main');
     }
@@ -133,17 +107,11 @@ router.get('/userlist' , (req, res,next)=> {
     if(req.headers.cookie){
         let refreshToken = jwt_token.checkToken(req,res);
         let second = 1000; //쿠키 만료시간 초
-            // console.log('재발급 = ',refreshToken);
+        // console.log('재발급 = ',refreshToken);
 
-            //
-            mysqlConn.query(`SELECT idx,id,name,created_at FROM users ` ,function (err, db, fields) {
-                console.log(db);
-
-                res.cookie("accessToken", refreshToken ,{maxAge: 100 *second })
-                .status(200)
-                .render('userlist')
-            });
-    
+        res.cookie("accessToken", refreshToken ,{maxAge: 2 * 60 *second })
+        .status(200)
+        .render('userlist');
     }
     else{
         res.redirect('/');
@@ -154,16 +122,14 @@ router.post('/userlist' , (req, res,next)=> {
     if(req.headers.cookie){
         let refreshToken = jwt_token.checkToken(req,res);
         let second = 1000; //쿠키 만료시간 초
-            // console.log('재발급 = ',refreshToken);
 
-            //
-            mysqlConn.query(`SELECT idx,id,name,created_at FROM users ` ,function (err, db, fields) {
-                console.log(db);
+        mysqlConn.query(`SELECT idx,id,name,created_at FROM users ` ,function (err, db, fields) {
+            // console.log(db);
 
-                res.cookie("accessToken", refreshToken ,{maxAge: 100 *second })
-                .status(200)
-                .json(db)
-            });
+            res.cookie("accessToken", refreshToken ,{maxAge:  2 * 60  *second })
+            .status(200)
+            .json(db)
+        });
     
     }
     else{
@@ -177,6 +143,37 @@ router.get('/signup' , (req, res,next)=> {
     //let param = [req.body.id , req.body.password];
     res.render('signup')
 });
+
+router.post('/signup' , async(req, res,next)=> {   
+    try{
+        const {id ,name , password } = req.body;
+        const body_hashpw =  bcrypt.hashSync(req.body.password, salt);
+        // console.log('비번 해쉬 ', body_hashpw)
+        let sql = 'INSERT INTO users(id, name, pw) VALUES (?, ?, ?)';
+        let param = [req.body.id , req.body.name ,body_hashpw];
+        mysqlConn.query( sql , param ,function (err, db, fields) {
+            //err 랑 성공했을때 확인
+            if(err){
+                console.log(err);
+            }
+            else{
+                // console.log(db);
+            }
+        });
+        mysqlConn.end();
+        
+        res.status(200).json({
+            result : true,
+            message : '유저 생성 성공'
+        })
+    }catch(error){
+        console.log(error);
+        res.status(400)
+    }//try catch end
+
+});
+
+
 router.post('/signup_id' , async(req, res,next)=> {
        console.log(req.body.id);
        ////////mysql 문

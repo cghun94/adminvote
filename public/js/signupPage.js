@@ -1,9 +1,12 @@
-$(document).ready(function(){
-
+let id_result= false;
+let password_result = false;
+$(document).ready(function(){    
+    
     $("#id").keyup(function(){
         const id = $("#id").val();
         if(id.length < 5 || id.length >12){
-            document.getElementById("result").innerText = "아이디 길이는 5~12 사이 입니다"
+            id_result = false;
+            document.getElementById("result").innerText = "아이디 길이는 5~12 사이 입니다";
         }
         else{
             axios({        
@@ -13,13 +16,14 @@ $(document).ready(function(){
                     id: id,              
                 }        
             }).then( (res,next)=> {       
-                console.log('res.data = ', res);
+                // console.log('res.data = ', res);
                 if(res.data.result === true){
-                    document.getElementById("result").innerText = "가입 가능한 아이디 입니다"
-                    next();
+                    id_result = true;
+                    document.getElementById("result").innerText = "생성 가능한 아이디 입니다";
                 }
                 else{
-                    document.getElementById("result").innerText = "아이디 중복 입니다"
+                    id_result = false;
+                    document.getElementById("result").innerText = "아이디 중복 입니다";
                 }
             }).catch( (error )=> {
             
@@ -35,44 +39,56 @@ $(document).ready(function(){
         document.getElementById("result").innerText = ""
         const password_check = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
         if(password_check.test(password)){
-            document.getElementById("result").innerText = "가입 가능합니다"
+            password_result = true;
+            document.getElementById("result").innerText = "생성 가능합니다";
         }else{
-            document.getElementById("result").innerText = "길이가 8~25 사이 \n 영어+숫자+특수문자를 입력하세요"
+            password_result = false;
+            document.getElementById("result").innerText = "길이가 8~25 사이 \n 영어+숫자+특수문자를 입력하세요";
         }
     });//pw keyup
-
-    function signup_click(){
-        const id = $("#id").val();
-        const password =  $("#password").val();        
-        axios({        
-                method: 'post',
-                url: '/login',        
-                data: {        
-                    id: id,        
-                    password: password        
-                }        
-        }).then( (res)=> {       
-            console.log('res.data = ', res);                                
-            if(res.data.accessToken){
-                // localStorage.setItem("accessToken",res.data.accessToken)
-                // let accessToken = localStorage.getItem("accessToken");                                                
-                location.href='/main';                    
-            }
-            else{
-                // console.log('res.data.accessToken 토큰 없음');
-                
-            }
-        }).catch( (error )=> {
-            
-            if(error.response.status === 400 ){
-                document.getElementById("result").innerText = "아이디가 틀렸거나 없습니다."
-            }
-            if(error.response.status === 401 ){
-                document.getElementById("result").innerText = "비밀번호가 틀렸습니다."
-            }
-            // console.log(error); 
-        });        
-    }
-
     
+       
 });//ready
+
+function signup_click(){
+    try{
+        if(id_result === false || password_result === false){
+            alert('생성 할수 없습니다, 조건을 확인해주세요')
+        }else{
+            const id = $("#id").val();
+            const name = $("#name").val();
+            const password =  $("#password").val();        
+            axios({        
+                    method: 'post',
+                    url: '/signup',        
+                    data: {        
+                        id: id,
+                        name : name,       
+                        password: password        
+                    }        
+            }).then( (res)=> {       
+                // console.log('res.data = ', res);                                
+                if(res.data.result){
+                    alert('생성에 성공하셨습니다.');
+                    location.href='/userlist';                    
+                }
+                
+            }).catch( (error )=> {
+                
+                if(error.response.status === 400 ){
+                    document.getElementById("result").innerText = "아이디가 틀렸거나 없습니다."
+                }
+                if(error.response.status === 401 ){
+                    document.getElementById("result").innerText = "비밀번호가 틀렸습니다."
+                }
+                // console.log(error); 
+            }); 
+        }
+
+    }catch(err){
+        console.log(err);
+    }
+    
+           
+}
+

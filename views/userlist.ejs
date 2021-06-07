@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="../public/css/userlist.css">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="../public/js/mainPage.js"></script>
+    <script src="../public/js/userlistPage.js"></script>
 </head>
     <%- include ('./header')%>
     
@@ -28,12 +28,12 @@
                 $.post('/userlist' , function(db){
                     $(db).each(function(index , item ){
                         let output='';
-                        console.log(item);
                         output += '<tr>';
                             output += ' <td>' + item.idx + '</td>';
                             output += ' <td>' + item.id + '</td>';
                             output += ' <td>' + item.name + '</td>';
-                            output += ' <td>' + item.created_at + '</td>';
+                            output += ' <td>' + item.created_at + '</td>';                           
+                            output += ` <td>` + `<button type="button" class="btn" onclick="delete_click(`+ item.idx +`);">` + '삭제' + `</button>` +  `</td>`;
                         output += '</tr>';
                         $('#output').append(output); 
                     });
@@ -48,10 +48,11 @@
         <table border="3">
             <thead>
                 <tr>
-                    <td width = "50px" >Idx</td>
-                    <td width = "100px">Id</td>
-                    <td width = "100px">Name</td>
-                    <td>Created</td>
+                    <td width = "10px" >Idx</td>
+                    <td width = "10px">Id</td>
+                    <td width = "50px">Name</td>
+                    <td width = "100px" >Created</td>
+                    <td width = "100px" > </td>
                 </tr>
             </thead>       
             <tbody id="output">

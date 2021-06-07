@@ -41,7 +41,7 @@ module.exports = {
             }
         }
         else{
-            return res.json({
+            return res.status(402).json({
                 success:  false,
                 message : '토큰 검증 실패'
             });
