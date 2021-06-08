@@ -15,10 +15,6 @@ module.exports = {
     },
 
     checkToken : (req, res ) => {
-        if(req.headers.cookie === undefined){
-          return res.status(401).render('/');
-        }
-    
         if(req.headers.cookie){
             let cookies_token = cookie.parse(req.headers.cookie);
             cookies_token = cookies_token.accessToken;
@@ -39,12 +35,12 @@ module.exports = {
                 // res.cookie("accessToken", refreshToken ,{maxAge: 100 *second })
                 return refreshToken;
             }
+            else{
+                return res.status(402).render('error')
+            }
         }
         else{
-            return res.status(402).json({
-                success:  false,
-                message : '토큰 검증 실패'
-            });
+            return res.status(402).render('error')
         }     
     },
     logout : (req, res ) => {

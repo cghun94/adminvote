@@ -37,6 +37,7 @@ Ubuntu 20.04.1 LTS + Node.js 10.19 + npm 6.14.4 환경에서 작성되었습니�
 ```
 - `localhost:3000`으로 접속이 가능합니다 
 - port 수정시 env파일에서 설정 하거나 bin/www.js 에서 port 설정
+- env 파일위치 확인 코드 `require('dotenv').config({path : '/root/admin/.env'});` 
 
 
 ### 프레임워크 환경
@@ -60,11 +61,12 @@ Ubuntu 20.04.1 LTS + Node.js 10.19 + npm 6.14.4 환경에서 작성되었습니�
 ```sql
 
 CREATE TABLE users(
-  idx int NOT NULL AUTO_INCREMENT primary key,
-  id char(20) NOT NULL ,
+  id char(20) NOT NULL primary key,
+  idx int NOT NULL AUTO_INCREMENT ,
   name varchar(100) ,
   pw varchar(255),
-  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+  created_at DATETIME ON UPDATE now() DEFAULT now() NOT NULL ,
+  UNIQUE INDEX `users_uk_idx` (idx)
 );
 
 ```
@@ -72,19 +74,45 @@ CREATE TABLE users(
 ```
 mysql> desc users;
 
-+------------+--------------+------+-----+-------------------+-------------------+
-| Field      | Type         | Null | Key | Default           | Extra             |
-+------------+--------------+------+-----+-------------------+-------------------+
-| idx        | int          | NO   | PRI | NULL              | auto_increment    |
-| id         | char(20)     | NO   |     | NULL              |                   |
-| name       | varchar(100) | YES  |     | NULL              |                   |
-| pw         | varchar(255) | YES  |     | NULL              |                   |
-| created_at | datetime     | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
-+------------+--------------+------+-----+-------------------+-------------------+
-
++------------+--------------+------+-----+-------------------+-----------------------------------------------+
+| Field      | Type         | Null | Key | Default           | Extra                                         |
++------------+--------------+------+-----+-------------------+-----------------------------------------------+
+| id         | char(20)     | NO   | PRI | NULL              |                                               |
+| idx        | int          | NO   | UNI | NULL              | auto_increment                                |
+| name       | varchar(100) | YES  |     | NULL              |                                               |
+| pw         | varchar(255) | YES  |     | NULL              |                                               |
+| created_at | datetime     | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++------------+--------------+------+-----+-------------------+-----------------------------------------------+
 
 ```
 
+```sql
+
+CREATE TABLE AIP(
+  num int NOT NULL AUTO_INCREMENT primary key,
+  users_id char(20) NOT NULL ,
+  total DOUBLE,
+  buy DOUBLE,
+  sell DOUBLE,
+  created_at DATETIME ON UPDATE now() DEFAULT now() NOT NULL ,
+  UNIQUE INDEX `AIP_uk_usersid` (users_id),
+  FOREIGN KEY (users_id) REFERENCES users(id)
+);
+
+mysql> desc AIP;
++------------+----------+------+-----+-------------------+-----------------------------------------------+
+| Field      | Type     | Null | Key | Default           | Extra                                         |
++------------+----------+------+-----+-------------------+-----------------------------------------------+
+| num        | int      | NO   | PRI | NULL              | auto_increment                                |
+| users_id   | char(20) | NO   | UNI | NULL              |                                               |
+| total      | double   | YES  |     | NULL              |                                               |
+| buy        | double   | YES  |     | NULL              |                                               |
+| sell       | double   | YES  |     | NULL              |                                               |
+| created_at | datetime | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++------------+----------+------+-----+-------------------+-----------------------------------------------+
+
+
+```
 
 
 ---

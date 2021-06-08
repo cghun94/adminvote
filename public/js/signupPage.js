@@ -76,10 +76,12 @@ function signup_click(){
             }).catch( (error )=> {
                 
                 if(error.response.status === 400 ){
-                    document.getElementById("result").innerText = "아이디가 틀렸거나 없습니다."
+                    document.getElementById("result").innerText = "400에러";
+                    // alert(error.response.message);
                 }
-                if(error.response.status === 401 ){
-                    document.getElementById("result").innerText = "비밀번호가 틀렸습니다."
+                if(error.response.status === 404 ){
+                    document.getElementById("result").innerText = "404에러";
+                    // alert(error.response.message);
                 }
                 // console.log(error); 
             }); 

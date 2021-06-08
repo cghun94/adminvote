@@ -1,3 +1,27 @@
+$(document).ready(function(){
+    function dbData(){
+        //내용물 제거
+        $('#output').empty();
+        
+        //ajax 수행
+        $.post('/userlist' , function(data){
+            // console.log(data);
+            $(data).each(function(index , item ){
+                let output='';
+                // console.log(item);
+                    output += '<tr>';
+                        output += ' <td>' + item.idx + '</td>';
+                        output += ' <td>' + item.id + '</td>';
+                        output += ' <td>' + item.name + '</td>';
+                        output += ' <td>' + item.created_at + '</td>';
+                        output += ` <td width = "100px"> <button type="button" class="btn" onclick="delete_click(`+ item.idx +`);"> 삭제 </button> </td>`;
+                    output += '</tr>';
+                $('#output').append(output); 
+            });
+        });
+    }//function dbData
+    dbData();
+});
 function logout(){
     axios({        
             method: 'post',
@@ -15,9 +39,36 @@ function logout(){
     });        
 }
 
-delete_click = (idx) => {
-    let a=  $(idx);
-    console.log(a);
+delete_click = (ths) => {
+    let num =  $(ths)[0];
+    const idx = num;
+    // alert('정말 삭제하시겠습니까?');
+    axios({        
+            method: 'post',
+            url: '/delete',        
+            data: {        
+                idx: idx
+            }        
+    }).then( (res)=> {       
+        console.log('res.data = ', res);                                
+        if(res.data.result === true){
+            
+            location.href='/userlist';                    
+        }
+        else{
+            // console.log('res.data.accessToken 토큰 없음');
+            
+        }
+    }).catch( (error )=> {
+        
+        if(error.response.status === 400 ){
+            document.getElementById("result").innerText = "아이디가 틀렸거나 없습니다."
+        }
+        if(error.response.status === 401 ){
+            document.getElementById("result").innerText = "비밀번호가 틀렸습니다."
+        }
+        console.log(error);
+    });        
 
 }
 

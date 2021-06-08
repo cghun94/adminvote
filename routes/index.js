@@ -22,6 +22,7 @@ router.get('/', async (req, res ,next) => {
     try{
         if(req.headers.cookie){
             jwt_token.checkToken(req,res,req);
+            console.log('/ = ',jwt_token.checkToken(req,res,req))
             try{
                 res.redirect('/main');
             }catch (err) {
@@ -35,7 +36,7 @@ router.get('/', async (req, res ,next) => {
         }
         
     }catch(err){
-        console.log(err);
+        console.log(err.message);
     }
     
 });
@@ -105,13 +106,17 @@ router.post('/logout', async(req,res)=>{
 
 router.get('/userlist' , (req, res,next)=> {
     if(req.headers.cookie){
-        let refreshToken = jwt_token.checkToken(req,res);
-        let second = 1000; //쿠키 만료시간 초
-        // console.log('재발급 = ',refreshToken);
+        if(jwt_token.checkToken(req,res)){
+            let refreshToken = jwt_token.checkToken(req,res);
+            let second = 1000; //쿠키 만료시간 초
+            // console.log('재발급 = ',refreshToken);
 
-        res.cookie("accessToken", refreshToken ,{maxAge: 2 * 60 *second })
-        .status(200)
-        .render('userlist');
+            res.cookie("accessToken", refreshToken ,{maxAge: 2 * 60 *second })
+            .status(200)
+            .render('userlist');
+        }        
+        
+        
     }
     else{
         res.redirect('/');
@@ -122,18 +127,19 @@ router.post('/userlist' , (req, res,next)=> {
     if(req.headers.cookie){
         let refreshToken = jwt_token.checkToken(req,res);
         let second = 1000; //쿠키 만료시간 초
-
-        mysqlConn.query(`SELECT idx,id,name,created_at FROM users ` ,function (err, db, fields) {
-            // console.log(db);
-
+       
+        mysqlConn.query(`SELECT idx,id,name,created_at FROM users ` ,function (err, usersTable) {
+            
+            console.log('userlist data ',usersTable);
             res.cookie("accessToken", refreshToken ,{maxAge:  2 * 60  *second })
             .status(200)
-            .json(db)
+            .send(usersTable)
         });
-    
+
+        ;
     }
     else{
-        res.redirect('/');
+        res.redirect('/');        
     }   
 });
 
@@ -146,29 +152,56 @@ router.get('/signup' , (req, res,next)=> {
 
 router.post('/signup' , async(req, res,next)=> {   
     try{
-        const {id ,name , password } = req.body;
+        const password_check = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
+        
         const body_hashpw =  bcrypt.hashSync(req.body.password, salt);
         // console.log('비번 해쉬 ', body_hashpw)
         let sql = 'INSERT INTO users(id, name, pw) VALUES (?, ?, ?)';
         let param = [req.body.id , req.body.name ,body_hashpw];
-        mysqlConn.query( sql , param ,function (err, db, fields) {
-            //err 랑 성공했을때 확인
-            if(err){
-                console.log(err);
-            }
-            else{
-                // console.log(db);
-            }
-        });
-        mysqlConn.end();
         
-        res.status(200).json({
-            result : true,
-            message : '유저 생성 성공'
-        })
+        //post man 
+        mysqlConn.query( 'SELECT idx,id,name,created_at FROM users where id = ?' , req.body.id ,function (err, db, fields) {
+            //err 랑 성공했을때 확인
+            console.log(db.length);
+            if(db === undefined || db.length === 0){
+                console.log('아이디 없음');
+                //아이디가 없을떄 생성
+                console.log(req.body.password)
+                console.log(password_check.test(req.body.password));
+                //비밀번호 양식이 맞을떄
+                if(password_check.test(req.body.password) === true ){
+                    console.log('아이디 생성1');
+
+                    mysqlConn.query( sql , param ) ;
+                    res.status(200).json({
+                        result : true,
+                        message : '유저 생성 성공'
+                    })
+                }//비밀번호 양식 if문
+                //비밀번호 양식이 틀렸을때
+                else{
+                    res.status(400).json({
+                        result : false,
+                        message : '비밀번호 양식 틀림'
+                    })
+                }//비밀번호 양식 else문              
+                     
+            }//아이디 if문
+            else{
+                console.log('아이디 있음');
+                console.log(db)
+                res.status(400).json({
+                    result : false,
+                    message : '아이디 존재'
+                })
+            }//아이디 else문
+        });//id 체크 sql문
     }catch(error){
         console.log(error);
-        res.status(400)
+        res.status(404).json({
+            result : false,
+            message : '404'
+        })
     }//try catch end
 
 });
@@ -194,5 +227,63 @@ router.post('/signup_id' , async(req, res,next)=> {
             })
            }
        });//mysql end
+});
+
+router.post('/delete' , async(req, res,next)=> {
+    console.log(req.body.idx);
+    ////////mysql 문
+    mysqlConn.query(`DELETE FROM users WHERE idx = ?` , [req.body.idx] ,function (err, db, fields) {
+        if(err){
+            console.log(err);
+            res.status(404).json({
+                result : false,
+                message : 'mysql err'
+            })
+        }
+        else{
+            console.log('삭제성공');
+            res.status(200).json({
+                result : true,
+                message : '삭제성공'
+            })
+        }
+    });//mysql end
+});
+
+router.get('/aip' , (req, res,next)=> {
+    if(req.headers.cookie){
+        let refreshToken = jwt_token.checkToken(req,res);
+        let second = 1000; //쿠키 만료시간 초
+
+        res.cookie("accessToken", refreshToken ,{maxAge:  2 * 60  *second })
+        .status(200)
+        .render('aip')
+       
+
+       
+    }
+    else{
+        res.redirect('/');        
+    }   
+});
+
+router.post('/aip' , (req, res,next)=> {
+    if(req.headers.cookie){
+        let refreshToken = jwt_token.checkToken(req,res);
+        let second = 1000; //쿠키 만료시간 초
+       
+        mysqlConn.query(`SELECT * FROM AIP ` ,function (err, aipTable) {
+            
+            console.log('userlist data ',aipTable);
+            res.cookie("accessToken", refreshToken ,{maxAge:  2 * 60  *second })
+            .status(200)
+            .send(aipTable)
+        });
+
+        ;
+    }
+    else{
+        res.redirect('/');        
+    }   
 });
 module.exports = router;
