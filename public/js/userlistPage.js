@@ -35,7 +35,8 @@ function logout(){
             location.href='/' ;                    
         }
     }).catch( (error)=> {
-        console.log(error);        
+        document.getElementById("result").innerText = `${error.response.status} 에러\n ${error.response.data.message}`;
+        // console.log(error);       
     });        
 }
 
@@ -60,14 +61,7 @@ delete_click = (ths) => {
             
         }
     }).catch( (error )=> {
-        
-        if(error.response.status === 400 ){
-            document.getElementById("result").innerText = "아이디가 틀렸거나 없습니다."
-        }
-        if(error.response.status === 401 ){
-            document.getElementById("result").innerText = "비밀번호가 틀렸습니다."
-        }
-        console.log(error);
+        document.getElementById("result").innerText = `${error.response.status} 에러\n ${error.response.data.message}`;
     });        
 
 }

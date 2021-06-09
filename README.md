@@ -61,13 +61,14 @@ Ubuntu 20.04.1 LTS + Node.js 10.19 + npm 6.14.4 환경에서 작성되었습니�
 ```sql
 
 CREATE TABLE users(
-  id char(20) NOT NULL primary key,
-  idx int NOT NULL AUTO_INCREMENT ,
-  name varchar(100) ,
-  pw varchar(255),
-  created_at DATETIME ON UPDATE now() DEFAULT now() NOT NULL ,
-  UNIQUE INDEX `users_uk_idx` (idx)
-);
+  idx int(11) unsigned AUTO_INCREMENT NOT NULL primary key COMMENT '회원번호',
+  id char(20) NOT NULL  COMMENT '아이디',
+  name varchar(100) NOT NULL COMMENT '이름',
+  pw varchar(255) NOT NULL COMMENT '비밀번호',
+  created_at DATETIME DEFAULT now() NOT NULL COMMENT '생성날짜',
+  updated_at DATETIME ON UPDATE now() DEFAULT now() NOT NULL COMMENT '최근업뎃날짜',
+  UNIQUE INDEX `users_uk_idx` (id)
+)ENGINE=InnoDB charset='utf8';
 
 ```
 
@@ -77,12 +78,14 @@ mysql> desc users;
 +------------+--------------+------+-----+-------------------+-----------------------------------------------+
 | Field      | Type         | Null | Key | Default           | Extra                                         |
 +------------+--------------+------+-----+-------------------+-----------------------------------------------+
-| id         | char(20)     | NO   | PRI | NULL              |                                               |
-| idx        | int          | NO   | UNI | NULL              | auto_increment                                |
-| name       | varchar(100) | YES  |     | NULL              |                                               |
-| pw         | varchar(255) | YES  |     | NULL              |                                               |
-| created_at | datetime     | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
+| idx        | int unsigned | NO   | PRI | NULL              | auto_increment                                |
+| id         | char(20)     | NO   | UNI | NULL              |                                               |
+| name       | varchar(100) | NO   |     | NULL              |                                               |
+| pw         | varchar(255) | NO   |     | NULL              |                                               |
+| created_at | datetime     | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED                             |
+| updated_at | datetime     | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
 +------------+--------------+------+-----+-------------------+-----------------------------------------------+
+
 
 ```
 
@@ -99,18 +102,10 @@ CREATE TABLE AIP(
   FOREIGN KEY (users_id) REFERENCES users(id)
 );
 
-mysql> desc AIP;
-+------------+----------+------+-----+-------------------+-----------------------------------------------+
-| Field      | Type     | Null | Key | Default           | Extra                                         |
-+------------+----------+------+-----+-------------------+-----------------------------------------------+
-| num        | int      | NO   | PRI | NULL              | auto_increment                                |
-| users_id   | char(20) | NO   | UNI | NULL              |                                               |
-| total      | double   | YES  |     | NULL              |                                               |
-| buy        | double   | YES  |     | NULL              |                                               |
-| sell       | double   | YES  |     | NULL              |                                               |
-| created_at | datetime | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
-+------------+----------+------+-----+-------------------+-----------------------------------------------+
+```
 
+```
+mysql> desc AIP;
 
 ```
 

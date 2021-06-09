@@ -1,12 +1,11 @@
 let id_result= false;
 let password_result = false;
 $(document).ready(function(){    
-    
     $("#id").keyup(function(){
-        const id = $("#id").val();
-        if(id.length < 5 || id.length >12){
+        let id = $("#id").val();
+        if(id.length < 5 || id.length >20){
             id_result = false;
-            document.getElementById("result").innerText = "아이디 길이는 5~12 사이 입니다";
+            document.getElementById("result").innerText = "아이디 길이는 5~20 사이 입니다";
         }
         else{
             axios({        
@@ -35,12 +34,33 @@ $(document).ready(function(){
     });//id kekup
 
     $("#password").keyup(function(){
-        const password =  $("#password").val();
+        let id = $("#id").val();
+        let password =  $("#password").val();
         document.getElementById("result").innerText = ""
         const password_check = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
         if(password_check.test(password)){
-            password_result = true;
-            document.getElementById("result").innerText = "생성 가능합니다";
+            // password_result = true;
+            // document.getElementById("result").innerText = "생성 가능합니다";
+            axios({        
+                method: 'post',
+                url: '/signup_pw',        
+                data: {
+                    id : id,        
+                    password: password,              
+                }        
+            }).then( (res,next)=> {       
+                // console.log('res.data = ', res);
+                if(res.data.result === true){
+                    password_result = true;
+                    document.getElementById("result").innerText = "생성 가능합니다";
+                }
+                else{
+                    password_result = false;
+                    document.getElementById("result").innerText = "길이가 8~25 사이 \n 영어+숫자+특수문자를 입력하세요";;
+                }
+            }).catch( (error )=> {            
+                console.log(error); 
+            });
         }else{
             password_result = false;
             document.getElementById("result").innerText = "길이가 8~25 사이 \n 영어+숫자+특수문자를 입력하세요";
@@ -73,16 +93,8 @@ function signup_click(){
                     location.href='/userlist';                    
                 }
                 
-            }).catch( (error )=> {
-                
-                if(error.response.status === 400 ){
-                    document.getElementById("result").innerText = "400에러";
-                    // alert(error.response.message);
-                }
-                if(error.response.status === 404 ){
-                    document.getElementById("result").innerText = "404에러";
-                    // alert(error.response.message);
-                }
+            }).catch( (error )=> {                
+                document.getElementById("result").innerText = `${error.response.status} 에러\n ${error.response.data.message}`;
                 // console.log(error); 
             }); 
         }
