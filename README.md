@@ -67,7 +67,7 @@ CREATE TABLE users(
   pw varchar(255) NOT NULL COMMENT '비밀번호',
   created_at DATETIME DEFAULT now() NOT NULL COMMENT '생성날짜',
   updated_at DATETIME ON UPDATE now() DEFAULT now() NOT NULL COMMENT '최근업뎃날짜',
-  UNIQUE INDEX `users_uk_idx` (id)
+  UNIQUE INDEX `users_uk_id` (id)
 )ENGINE=InnoDB charset='utf8';
 
 ```
