@@ -12,7 +12,8 @@ function logout(){
         }
     }).catch( (error)=> {
         console.log(error);
-        document.getElementById("result").innerText = `${error.response.status} 에러\n ${error.response.data.message}`;        
+        document.getElementById("result").innerText = `${error.response.status} 에러\n ${error.response.data.message}`;
+        location.href='/error';        
     });        
 }
 

@@ -63,6 +63,7 @@ module.exports = {
                                         console.log('result ',result);
                                         //비번일치                                        
                                         //로그인 관리자 맞은지 확인
+                                        //일반 로그인에서는 불필요 
                                         if(db[0].idx === 1){
                                             //jwt 토큰생성
                                             const accessToken = jwt_token.accessToken( db[0].id);

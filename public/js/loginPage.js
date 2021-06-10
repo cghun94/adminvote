@@ -24,5 +24,6 @@ function login_click(){
     }).catch( (error )=> {
         document.getElementById("result").innerText = `${error.response.status} 에러\n ${error.response.data.message}`;
         // console.log(error.response.data.message);
+        location.href='/error';
     });        
 }

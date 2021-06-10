@@ -38,6 +38,7 @@ function logout(){
             location.href='/' ;                    
         }
     }).catch( (error)=> {
-        console.log(error);        
+        console.log(error);
+        location.href='/error';        
     });        
 }

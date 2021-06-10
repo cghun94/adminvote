@@ -8,7 +8,7 @@ module.exports = {
             {req} ,
                 process.env.ACCESS_SECRET,
             {
-                expiresIn: "5s",
+                expiresIn: "5s", //토큰 확인을 위해 5초 , 프로젝트 완료시 1m 바꾸기
             }
         );
       
@@ -19,7 +19,7 @@ module.exports = {
             {req} ,
                 process.env.REFRESH_SECRET,
             {
-                expiresIn: "10s",
+                expiresIn: "10s", //토큰 확인을위해 10초 , 프로젝트 완료시 10m바꾸기
             }
         );
       
@@ -39,7 +39,7 @@ module.exports = {
                         {id :decoded.id},
                         process.env.REFRESH_SECRET,
                         {
-                            expiresIn: "1m",
+                            expiresIn: "1m", //토큰 확인을 위해 1m, 프로젝트 완료시 1d로 바꾸기
                         }                  
                     );
                     

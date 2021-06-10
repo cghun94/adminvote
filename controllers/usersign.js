@@ -3,9 +3,10 @@ const express = require('express');
 const jwt_token= require('./token');
 const bcrypt = require('bcrypt');
 
-const mysqlconfig = require('./../config/mysql');
+const mysqlconfig = require('../config/mysql');
 const mysqlConn = mysqlconfig.init();
 
+//유저생성 페이지
 module.exports = {
     postSignupid : async(req , res ) => {
         // console.log(req.body.id)
@@ -61,34 +62,46 @@ module.exports = {
             if(db === undefined || db.length === 0){
                 console.log('아이디 없음');
                 //아이디가 없을떄 생성
-                console.log(req.body.password)
-                console.log(password_check.test(req.body.password));
-                //비밀번호 양식이 맞을떄
-                if(password_check.test(req.body.password) === true ){
-                    console.log('아이디 생성1');
-                    let body_hashpw =  bcrypt.hashSync(req.body.password,  process.env.salt);
-                    let param = [req.body.id , req.body.name ,body_hashpw];
-
-                    mysqlConn.query( sql , param ) ;
-
-                    res.status(200).json({
-                        result : true,
-                        message : '유저 생성 성공'
-                    })
-                }//비밀번호 양식 if문
-                //비밀번호 양식이 틀렸을때
-                else{
+                // console.log('네임', req.body.name)
+                if(req.body.name === ""){
+                    console.log('아이디 생성 네임 확인');
                     res.status(400).json({
+                        code : 400,
                         result : false,
-                        message : '비밀번호 양식 틀림'
+                        message : '이름을 작성해주세요'
                     })
-                }//비밀번호 양식 else문              
-                     
+                }else{
+                    // console.log(req.body.password)
+                    console.log(password_check.test(req.body.password));
+                    //비밀번호 양식이 맞을떄
+                    if(password_check.test(req.body.password) === true ){
+                        console.log('아이디 생성 비번 확인');
+                        let body_hashpw =  bcrypt.hashSync(req.body.password,  process.env.salt);
+                        let param = [req.body.id , req.body.name ,body_hashpw];
+
+                        mysqlConn.query( sql , param ) ;
+
+                        res.status(200).json({
+                            code : 200,
+                            result : true,
+                            message : '유저 생성 성공'
+                        })
+                    }//비밀번호 양식 if문
+                    //비밀번호 양식이 틀렸을때
+                    else{
+                        res.status(400).json({
+                            code : 400,
+                            result : false,
+                            message : '비밀번호 양식 틀림'
+                        })
+                    }//비밀번호 양식 else문 
+                }                     
             }//아이디 if문
             else{
                 console.log('아이디 있음');
                 console.log(db)
                 res.status(400).json({
+                    code : 400,
                     result : false,
                     message : '아이디 존재'
                 })
