@@ -1,5 +1,4 @@
 const mysql = require('mysql');
-
 const mysqlConnection = {
     init: function () {
         return mysql.createConnection({
