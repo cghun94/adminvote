@@ -61,10 +61,11 @@ Ubuntu 20.04.1 LTS + Node.js 10.19 + npm 6.14.4 환경에서 작성되었습니�
 ```sql
 
 CREATE TABLE users(
-  idx int(11) unsigned AUTO_INCREMENT NOT NULL primary key COMMENT '회원번호',
+  idx int(11) unsigned AUTO_INCREMENT NOT NULL primary key COMMENT '회원번호 또는 지갑주소',
   id char(20) NOT NULL  COMMENT '아이디',
   name varchar(100) NOT NULL COMMENT '이름',
   pw varchar(255) NOT NULL COMMENT '비밀번호',
+  KRW DOUBLE DEFAULT 0 COMMENT '원화',
   created_at DATETIME DEFAULT now() NOT NULL COMMENT '생성날짜',
   updated_at DATETIME ON UPDATE now() DEFAULT now() NOT NULL COMMENT '최근업뎃날짜',
   UNIQUE INDEX `users_uk_id` (id)
@@ -91,24 +92,80 @@ mysql> desc users;
 
 ```sql
 
-CREATE TABLE AIP(
-  num int NOT NULL AUTO_INCREMENT primary key,
-  users_id char(20) NOT NULL ,
-  total DOUBLE,
-  buy DOUBLE,
-  sell DOUBLE,
-  created_at DATETIME ON UPDATE now() DEFAULT now() NOT NULL ,
-  UNIQUE INDEX `AIP_uk_usersid` (users_id),
-  FOREIGN KEY (users_id) REFERENCES users(id)
-);
+CREATE TABLE Asset(
+  users_idx int(11) unsigned NOT NULL COMMENT '유저의 회원번호 또는 지갑주소',
+  CoinName char(30) not null COMMENT '코인명',
+  PrevBalance DOUBLE DEFAULT 0 COMMENT '거래전 잔고금액',
+  Quantity DOUBLE DEFAULT 0 COMMENT '보유수량',
+  NowPrice DOUBLE DEFAULT 0 COMMENT '현재시세',
+  buyAmount DOUBLE DEFAULT 0 COMMENT '매수금액',
+  Withdrawal DOUBLE DEFAULT 0 COMMENT '출금금액',
+  AfterBalance DOUBLE DEFAULT 0 COMMENT '거래후 잔고금액',
+  LatestTime DATETIME ON UPDATE now() DEFAULT now() NOT NULL COMMENT '최근거래시간',
+  FOREIGN KEY (users_idx) REFERENCES users(idx)
+)ENGINE=InnoDB charset='utf8';
 
 ```
 
 ```
-mysql> desc AIP;
+mysql> desc Asset;
++--------------+--------------+------+-----+-------------------+-----------------------------------------------+
+| Field        | Type         | Null | Key | Default           | Extra                                         |
++--------------+--------------+------+-----+-------------------+-----------------------------------------------+
+| users_idx    | int unsigned | NO   | MUL | NULL              |                                               |
+| CoinName     | char(30)     | NO   |     | NULL              |                                               |
+| PrevBalance  | double       | YES  |     | 0                 |                                               |
+| Quantity     | double       | YES  |     | 0                 |                                               |
+| NowPrice     | double       | YES  |     | 0                 |                                               |
+| buyAmount    | double       | YES  |     | 0                 |                                               |
+| Withdrawal   | double       | YES  |     | 0                 |                                               |
+| AfterBalance | double       | YES  |     | 0                 |                                               |
+| LatestTime   | datetime     | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++--------------+--------------+------+-----+-------------------+-----------------------------------------------+
 
 ```
 
+```sql
+
+CREATE TABLE Log(
+  idx int(11) unsigned AUTO_INCREMENT NOT NULL primary key COMMENT '거래번호',
+  users_idx int(11) unsigned NOT NULL COMMENT '유저의 회원번호',
+  CoinName char(30) not null COMMENT '코인명',
+  PrevBalance DOUBLE DEFAULT 0 COMMENT '거래전 잔고금액',
+  Quantity DOUBLE DEFAULT 0 COMMENT '보유수량',
+  NowPrice DOUBLE DEFAULT 0 COMMENT '현재시세',
+  buyAmount DOUBLE DEFAULT 0 COMMENT '매수금액',
+  Withdrawal DOUBLE DEFAULT 0 COMMENT '출금금액',
+  AfterBalance DOUBLE DEFAULT 0 COMMENT '거래후 잔고금액',
+  prevKRW DOUBLE DEFAULT 0 COMMENT '거래전 원화',
+  AfterKRW DOUBLE DEFAULT 0 COMMENT '거래후 원화',
+  LatestTime DATETIME DEFAULT now() NOT NULL COMMENT '최근거래시간'
+)ENGINE=InnoDB charset='utf8';
+
+
+```
+
+
+```
++--------------+--------------+------+-----+-------------------+-------------------+
+| Field        | Type         | Null | Key | Default           | Extra             |
++--------------+--------------+------+-----+-------------------+-------------------+
+| idx          | int unsigned | NO   | PRI | NULL              | auto_increment    |
+| users_idx    | int unsigned | NO   |     | NULL              |                   |
+| CoinName     | char(30)     | NO   |     | NULL              |                   |
+| PrevBalance  | double       | YES  |     | 0                 |                   |
+| Quantity     | double       | YES  |     | 0                 |                   |
+| NowPrice     | double       | YES  |     | 0                 |                   |
+| buyAmount    | double       | YES  |     | 0                 |                   |
+| Withdrawal   | double       | YES  |     | 0                 |                   |
+| AfterBalance | double       | YES  |     | 0                 |                   |
+| prevKRW      | double       | YES  |     | 0                 |                   |
+| AfterKRW     | double       | YES  |     | 0                 |                   |
+| LatestTime   | datetime     | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
++--------------+--------------+------+-----+-------------------+-------------------+
+
+
+```
 
 ---
 ## 목차

@@ -3,28 +3,34 @@ $(document).ready(function(){
     let usersidx = url.get('usersidx')
     
     function dbData(){
-
         //내용물 제거
-        $('#Asset').empty();        
+        $('#output').empty();        
         axios({        
             method: 'post',
-            url: '/userlist/userAsset',        
+            url: '/log',        
             data: {        
                 usersidx: usersidx,         
             }        
         }).then( (res)=> {       
             console.log('res.data = ', res.data);
             $( res.data).each(function(index , item){                
-                let Asset='';                
-                Asset += '<tr>';
-                        Asset += ` <td> `+ item.CoinName + `</td>`;
-                        Asset += ` <td > `+ item.AfterBalance + ` </td>`;
-                        Asset += ' <td>' + item.Quantity + '</td>';
-                        Asset += ' <td>' + item.NowPrice + '</td>';
-                        Asset += ' <td >' + item.LatestTime + '</td>';
+                let output='';                
+                output += '<tr>';
+                        output += ` <td> `+ item.idx + `</td>`;
+                        output += ` <td > `+ item.users_idx + ` </td>`;
+                        output += ' <td>' + item.CoinName + '</td>';
+                        output += ' <td>' + item.PrevBalance + '</td>';
+                        output += ' <td >' + item.Quantity + '</td>';
+                        output += ' <td >' + item.NowPrice + '</td>';
+                        output += ' <td >' + item.buyAmount + '</td>';
+                        output += ' <td >' + item.Withdrawal + '</td>';
+                        output += ' <td >' + item.AfterBalance + '</td>';
+                        output += ' <td >' + item.prevKRW + '</td>';
+                        output += ' <td >' + item.AfterKRW + '</td>';
+                        output += ' <td >' + item.LatestTime + '</td>';
                         // output += ` <td width = "100px"> <button type="button" class="btn" onclick="delete_click(`+ item.idx +`);"> 삭제 </button> </td>`;
-                        Asset += '</tr>';
-                $('#Asset').append(Asset); 
+                        output += '</tr>';
+                $('#output').append(output); 
             });                              
             
         }).catch( (error )=> {
@@ -48,9 +54,10 @@ function logout(){
             location.href='/' ;                    
         }
     }).catch( (error)=> {
+        console.log(error);
         document.getElementById("result").innerText = `${error.response.status} 에러\n ${error.response.data.message}`;
-        location.href='/error';
-        // console.log(error);       
+        location.href='/error';        
     });        
 }
+
 

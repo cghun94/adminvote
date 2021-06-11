@@ -5,7 +5,7 @@ const cookie = require('cookie');
 module.exports = {
     accessToken : (req) => {
         return jwt.sign(
-            {req} ,
+            {id : req} ,
                 process.env.ACCESS_SECRET,
             {
                 expiresIn: "5s", //토큰 확인을 위해 5초 , 프로젝트 완료시 1m 바꾸기
@@ -16,7 +16,7 @@ module.exports = {
 
     refreshToken : (req) => {
         return jwt.sign(
-            {req} ,
+            { id : req} ,
                 process.env.REFRESH_SECRET,
             {
                 expiresIn: "10s", //토큰 확인을위해 10초 , 프로젝트 완료시 10m바꾸기
@@ -30,19 +30,19 @@ module.exports = {
             if(req.headers.cookie){
                 let cookies_token = cookie.parse(req.headers.cookie);
                 cookies_token = cookies_token.refreshToken;
-                console.log('Token checkToken 1', cookies_token)
+                // console.log('Token checkToken 1', cookies_token)
                 const decoded = jwt.verify(cookies_token, process.env.REFRESH_SECRET);
-                console.log('decoded ',decoded)
+                // console.log('decoded ',decoded)
                 if(decoded){  
                     // console.log(decoded)
                     let refreshToken = jwt.sign(
                         {id :decoded.id},
                         process.env.REFRESH_SECRET,
                         {
-                            expiresIn: "1m", //토큰 확인을 위해 1m, 프로젝트 완료시 1d로 바꾸기
+                            expiresIn: "1d", //토큰 확인을 위해 1m, 프로젝트 완료시 1d로 바꾸기
                         }                  
                     );
-                    
+                    console.log('토큰시간 연장')
                     return refreshToken;
                 }
             }
@@ -52,4 +52,23 @@ module.exports = {
         }     
     },
     
-  };
+    decoded : (req , res) =>{
+        try{
+            if(req.headers.cookie){
+                let cookies_token = cookie.parse(req.headers.cookie);
+                cookies_token = cookies_token.refreshToken;
+                console.log('Token checkToken 1', cookies_token)
+                const decoded = jwt.verify(cookies_token, process.env.REFRESH_SECRET);
+                console.log('decoded ',decoded)
+                if(decoded){  
+                    console.log(decoded)                    
+                    return decoded;
+                }
+            }
+        }catch(err){
+            console.log(err)
+            return res.status(404).render('error');
+        }        
+    },
+
+};

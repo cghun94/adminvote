@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>유저정보</title>
+    <link rel="stylesheet" type="text/css" href="../public/css/trade.css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="../public/js/tradePage.js"></script>
+</head>
+    <%- include ('./header')%>
+    
+    <script>
+
+    </script>
+
+    <body>
+        <table  border="3">
+            <thead>
+                <tr>
+                    <td colspan="7">마켓</td>
+                </tr>
+                <tr>
+                    <td width = "100px" >토큰</td>
+                    <td width = "100px">현재시가</td>
+                   
+                </tr>
+                <tr>
+                    <td width = "100px" ><button type="button" class="btn" onclick="coin_click('aip');">AIP</button> </td>
+                    <td width = "100px">~</td>
+                   
+                </tr>
+                <tr>
+                    <td width = "100px" >KBH</td>
+                    <td width = "100px">~</td>
+                   
+                </tr>
+                <tr>
+                    <td width = "100px" >KHAI</td>
+                    <td width = "100px">~</td>
+                   
+                </tr>
+            </thead>       
+            <tbody id="aip" >
+
+            </tbody>
+        </table>
+
+    </body>
+</html>

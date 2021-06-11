@@ -8,6 +8,24 @@ const mysqlConn = mysqlconfig.init();
 
 //유저생성 페이지
 module.exports = {
+    getSignup : (req , res ) => {
+        try{
+            if(req.headers.cookie){
+                console.log('getSignup 1',req.headers.cookie)
+                let refreshToken = jwt_token.checkToken(req,res);
+                res.cookie("refreshToken" , refreshToken)
+                .status(200).render('signup');
+            }
+            else{
+                console.log('getSignup 2',req.headers.cookie)
+                res.status(200).render('login');
+            }    
+        }catch(err){
+            console.log('getSignup 3',err)
+            res.status(404).render('err');
+        }
+    },
+
     postSignupid : async(req , res ) => {
         // console.log(req.body.id)
         mysqlConn.query(`SELECT idx,id FROM users where id = ?` , [req.body.id] ,function (err, db, fields) {

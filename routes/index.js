@@ -3,7 +3,10 @@ const router = express.Router();
 const index_controller = require('../controllers/index');
 const login_controller = require('../controllers/login');
 const page_controller = require('../controllers/page');
-const usersign_controller = require('../controllers/usersign')
+const userlist_controller = require('../controllers/userlist');
+const signup_controller = require('../controllers/signup');
+const trade_controller = require('../controllers/trade');
+const log_controller = require('../controllers/log');
 
 //라우트 경로 / 유지보수
 router.get('/', index_controller.index);
@@ -17,18 +20,32 @@ router.post('/logout', login_controller.postLogout);
 
 //page
 router.get('/main', page_controller.getMain);
-router.get('/signup', page_controller.getSignup);
-router.get('/userlist', page_controller.getUserlist);
-router.get('/userlist/userinfo', page_controller.getUserinfo);
 
-router.post('/userlist', page_controller.postUserlist);
-router.post('/userdelete', page_controller.postUserdelete);
-router.post('/userlist/userinfo', page_controller.postUserinfo);
-router.post('/userlist/userinfo/aip', page_controller.postUserinfoAIP);
+router.post('/header', page_controller.postHeader);
 
-//usersign
-router.post('/signup_id', usersign_controller.postSignupid);
-router.post('/signup_pw', usersign_controller.postSignuppw);
-router.post('/signup', usersign_controller.postSignup);
+//userlist
+router.get('/userlist', userlist_controller.getUserlist);
+router.get('/userlist/userinfo', userlist_controller.getUserinfo);
+
+router.post('/userlist', userlist_controller.postUserlist);
+router.post('/userdelete', userlist_controller.postUserdelete);
+router.post('/userlist/userAsset', userlist_controller.postUserAsset);
+
+//trade page
+router.get('/tradelist', trade_controller.getTradelist);
+router.get('/tradelist/aip', trade_controller.getAIP);
+
+router.post('/tradelist/aip', trade_controller.postAIP);
+//sign up
+router.get('/signup', signup_controller.getSignup);
+
+router.post('/signup_id', signup_controller.postSignupid);
+router.post('/signup_pw', signup_controller.postSignuppw);
+router.post('/signup', signup_controller.postSignup);
+
+//log page
+router.get('/log', log_controller.getLog);
+
+router.post('/log', log_controller.postLog);
 
 module.exports = router;

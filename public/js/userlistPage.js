@@ -11,11 +11,12 @@ $(document).ready(function(){
                 // console.log(item);
                     output += '<tr>';
                         output += ' <td>' + item.idx + '</td>';
-                        output += ` <td width = "100px"> <button type="button" class="btn" onclick="user_click(`+ item.idx +`);"> `+ item.id + `</button> </td>`;
-                        output += ` <td width = "100px"> <button type="button" class="btn" onclick="user_click(`+ item.idx +`);"> `+ item.name + `</button> </td>`;
+                        output += ` <td > <button type="button" class="btn" onclick="user_click(`+ item.idx +`);"> `+ item.id + `</button> </td>`;
+                        output += ` <td > <button type="button" class="btn" onclick="user_click(`+ item.idx +`);"> `+ item.name + `</button> </td>`;
+                        output += ' <td>' + item.KRW + ' 원 </td>';
                         output += ' <td>' + item.created_at + '</td>';
                         output += ' <td>' + item.updated_at + '</td>';
-                        output += ` <td width = "100px"> <button type="button" class="btn" onclick="delete_click(`+ item.idx +`);"> 삭제 </button> </td>`;
+                        output += ` <td > <button type="button" class="btn" onclick="delete_click(`+ item.idx +`);"> 삭제 </button> </td>`;
                     output += '</tr>';
                 $('#output').append(output); 
             });
