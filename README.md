@@ -95,12 +95,11 @@ mysql> desc users;
 CREATE TABLE Asset(
   users_idx int(11) unsigned NOT NULL COMMENT '유저의 회원번호 또는 지갑주소',
   CoinName char(30) not null COMMENT '코인명',
-  PrevBalance DOUBLE DEFAULT 0 COMMENT '거래전 잔고금액',
-  Quantity DOUBLE DEFAULT 0 COMMENT '보유수량',
-  NowPrice DOUBLE DEFAULT 0 COMMENT '현재시세',
+  Quantity DOUBLE DEFAULT 0 COMMENT '거래 전 수량',
+  tradeQuantity DOUBLE DEFAULT 0 COMMENT '거래 수량',
   buyAmount DOUBLE DEFAULT 0 COMMENT '매수금액',
   Withdrawal DOUBLE DEFAULT 0 COMMENT '출금금액',
-  AfterBalance DOUBLE DEFAULT 0 COMMENT '거래후 잔고금액',
+  AfterQuantity DOUBLE DEFAULT 0 COMMENT '거래 후 수량',
   LatestTime DATETIME ON UPDATE now() DEFAULT now() NOT NULL COMMENT '최근거래시간',
   FOREIGN KEY (users_idx) REFERENCES users(idx)
 )ENGINE=InnoDB charset='utf8';
@@ -109,19 +108,19 @@ CREATE TABLE Asset(
 
 ```
 mysql> desc Asset;
-+--------------+--------------+------+-----+-------------------+-----------------------------------------------+
-| Field        | Type         | Null | Key | Default           | Extra                                         |
-+--------------+--------------+------+-----+-------------------+-----------------------------------------------+
-| users_idx    | int unsigned | NO   | MUL | NULL              |                                               |
-| CoinName     | char(30)     | NO   |     | NULL              |                                               |
-| PrevBalance  | double       | YES  |     | 0                 |                                               |
-| Quantity     | double       | YES  |     | 0                 |                                               |
-| NowPrice     | double       | YES  |     | 0                 |                                               |
-| buyAmount    | double       | YES  |     | 0                 |                                               |
-| Withdrawal   | double       | YES  |     | 0                 |                                               |
-| AfterBalance | double       | YES  |     | 0                 |                                               |
-| LatestTime   | datetime     | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
-+--------------+--------------+------+-----+-------------------+-----------------------------------------------+
++---------------+--------------+------+-----+-------------------+-----------------------------------------------+
+| Field         | Type         | Null | Key | Default           | Extra                                         |
++---------------+--------------+------+-----+-------------------+-----------------------------------------------+
+| users_idx     | int unsigned | NO   | MUL | NULL              |                                               |
+| CoinName      | char(30)     | NO   |     | NULL              |                                               |
+| Quantity      | double       | YES  |     | 0                 |                                               |
+| tradeQuantity | double       | YES  |     | 0                 |                                               |
+| buyAmount     | double       | YES  |     | 0                 |                                               |
+| Withdrawal    | double       | YES  |     | 0                 |                                               |
+| AfterQuantity | double       | YES  |     | 0                 |                                               |
+| LatestTime    | datetime     | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED on update CURRENT_TIMESTAMP |
++---------------+--------------+------+-----+-------------------+-----------------------------------------------+
+
 
 ```
 
@@ -131,12 +130,12 @@ CREATE TABLE Log(
   idx int(11) unsigned AUTO_INCREMENT NOT NULL primary key COMMENT '거래번호',
   users_idx int(11) unsigned NOT NULL COMMENT '유저의 회원번호',
   CoinName char(30) not null COMMENT '코인명',
-  PrevBalance DOUBLE DEFAULT 0 COMMENT '거래전 잔고금액',
-  Quantity DOUBLE DEFAULT 0 COMMENT '보유수량',
+  Quantity DOUBLE DEFAULT 0 COMMENT '거래 전 수량',
+  tradeQuantity DOUBLE DEFAULT 0 COMMENT '거래 수량',
   NowPrice DOUBLE DEFAULT 0 COMMENT '현재시세',
   buyAmount DOUBLE DEFAULT 0 COMMENT '매수금액',
   Withdrawal DOUBLE DEFAULT 0 COMMENT '출금금액',
-  AfterBalance DOUBLE DEFAULT 0 COMMENT '거래후 잔고금액',
+  AfterQuantity DOUBLE DEFAULT 0 COMMENT '거래 후 수량',
   prevKRW DOUBLE DEFAULT 0 COMMENT '거래전 원화',
   AfterKRW DOUBLE DEFAULT 0 COMMENT '거래후 원화',
   LatestTime DATETIME DEFAULT now() NOT NULL COMMENT '최근거래시간'
@@ -147,22 +146,22 @@ CREATE TABLE Log(
 
 
 ```
-+--------------+--------------+------+-----+-------------------+-------------------+
-| Field        | Type         | Null | Key | Default           | Extra             |
-+--------------+--------------+------+-----+-------------------+-------------------+
-| idx          | int unsigned | NO   | PRI | NULL              | auto_increment    |
-| users_idx    | int unsigned | NO   |     | NULL              |                   |
-| CoinName     | char(30)     | NO   |     | NULL              |                   |
-| PrevBalance  | double       | YES  |     | 0                 |                   |
-| Quantity     | double       | YES  |     | 0                 |                   |
-| NowPrice     | double       | YES  |     | 0                 |                   |
-| buyAmount    | double       | YES  |     | 0                 |                   |
-| Withdrawal   | double       | YES  |     | 0                 |                   |
-| AfterBalance | double       | YES  |     | 0                 |                   |
-| prevKRW      | double       | YES  |     | 0                 |                   |
-| AfterKRW     | double       | YES  |     | 0                 |                   |
-| LatestTime   | datetime     | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
-+--------------+--------------+------+-----+-------------------+-------------------+
++---------------+--------------+------+-----+-------------------+-------------------+
+| Field         | Type         | Null | Key | Default           | Extra             |
++---------------+--------------+------+-----+-------------------+-------------------+
+| idx           | int unsigned | NO   | PRI | NULL              | auto_increment    |
+| users_idx     | int unsigned | NO   |     | NULL              |                   |
+| CoinName      | char(30)     | NO   |     | NULL              |                   |
+| Quantity      | double       | YES  |     | 0                 |                   |
+| tradeQuantity | double       | YES  |     | 0                 |                   |
+| NowPrice      | double       | YES  |     | 0                 |                   |
+| buyAmount     | double       | YES  |     | 0                 |                   |
+| Withdrawal    | double       | YES  |     | 0                 |                   |
+| AfterQuantity | double       | YES  |     | 0                 |                   |
+| prevKRW       | double       | YES  |     | 0                 |                   |
+| AfterKRW      | double       | YES  |     | 0                 |                   |
+| LatestTime    | datetime     | NO   |     | CURRENT_TIMESTAMP | DEFAULT_GENERATED |
++---------------+--------------+------+-----+-------------------+-------------------+
 
 
 ```
@@ -174,9 +173,10 @@ CREATE TABLE Log(
 ### 3.메뉴
   - 회원 관리
   - 코인 관리
+  - 로그 관리
 ### 4.회원 관리
   - 회원 관리
-  - 회원 관리 user
+  - 회원 생성
 ### 5.코인 관리(AIP, KBH,KHAI)
 ---
 <br/>
@@ -197,7 +197,6 @@ CREATE TABLE Log(
 ### 2. 관리자 메인페이지
  
   - 로그인시에 관리자 메인페이지(공지사항, 주의사항)
-  - 공지 주의사항 수정 버튼
   - 왼쪽 상단 관리자 페이지 클릭시 메인페이지 이동
 <br/>
 
@@ -205,11 +204,10 @@ CREATE TABLE Log(
 <br/>
 
 ### 3. 메뉴
- 
+
   - 회원관리
   - 코인 관리
 <br/>
-  회원관리: 유저의 정보를 관리<br/>
   회원관리: 유저의 정보를 관리<br/>
   <br/>
   
@@ -218,7 +216,6 @@ CREATE TABLE Log(
       2.  API , KBH , KHAI 의 버튼을 만든다
   
   각 해당코인의 쉬운접근으로 2번을 선택했다
-
   
 ---
 <br/>
@@ -236,15 +233,12 @@ CREATE TABLE Log(
   - 목록
     * 회원 고유번호
     * 아이디
-    * 비밀번호
-    * 각코인 보유량
-    * 거래량
-    * 최근 로그인
-    * 최근 로그아웃
-    * 회원가입 날짜
     * 이름
-    * 전화번호
-    * 회원 탈퇴 (잘못누를수있으니 alear 창)
+    * 보유 원화
+    * 각코인 보유량
+    * 최근 거래내역
+    * 생성 날짜    
+    * 회원 삭제
 
   
 ---

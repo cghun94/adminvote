@@ -17,11 +17,11 @@ $(document).ready(function(){
             $( res.data).each(function(index , item){                
                 let Asset='';                
                 Asset += '<tr>';
-                        Asset += ` <td> `+ item.CoinName + `</td>`;
-                        Asset += ` <td > `+ item.AfterBalance + ` </td>`;
-                        Asset += ' <td>' + item.Quantity + '</td>';
-                        Asset += ' <td>' + item.NowPrice + '</td>';
-                        Asset += ' <td >' + item.LatestTime + '</td>';
+                        Asset += ` <td> `+ item.CoinName + `</td>`;//코인명
+                        
+                        Asset += ' <td>' + item.AfterQuantity + '</td>'; //보유 수량
+                        
+                        Asset += ' <td >' + item.LatestTime + '</td>'; //최근거래
                         // output += ` <td width = "100px"> <button type="button" class="btn" onclick="delete_click(`+ item.idx +`);"> 삭제 </button> </td>`;
                         Asset += '</tr>';
                 $('#Asset').append(Asset); 

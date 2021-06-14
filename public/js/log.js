@@ -19,12 +19,12 @@ $(document).ready(function(){
                         output += ` <td> `+ item.idx + `</td>`;
                         output += ` <td > `+ item.users_idx + ` </td>`;
                         output += ' <td>' + item.CoinName + '</td>';
-                        output += ' <td>' + item.PrevBalance + '</td>';
-                        output += ' <td >' + item.Quantity + '</td>';
+                        output += ' <td>' + item.Quantity + '</td>';
+                        output += ' <td >' + item.tradeQuantity + '</td>';
                         output += ' <td >' + item.NowPrice + '</td>';
                         output += ' <td >' + item.buyAmount + '</td>';
                         output += ' <td >' + item.Withdrawal + '</td>';
-                        output += ' <td >' + item.AfterBalance + '</td>';
+                        output += ' <td >' + item.AfterQuantity + '</td>';
                         output += ' <td >' + item.prevKRW + '</td>';
                         output += ' <td >' + item.AfterKRW + '</td>';
                         output += ' <td >' + item.LatestTime + '</td>';

@@ -111,7 +111,7 @@ module.exports = {
     postUserAsset : async(req , res ) => {
         console.log('postUserAsset idx ', req.body.usersidx)
         // let idx = 1 ;
-        mysqlConn.query(`SELECT * FROM Asset where users_idx = ?  `, req.body.usersidx ,function (err, Table) {
+        mysqlConn.query(`SELECT * FROM Asset where users_idx = ? and AfterQuantity > 0 `, req.body.usersidx ,function (err, Table) {
             // console.log(Table);
             res.status(200).send(Table);
         });        

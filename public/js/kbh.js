@@ -47,7 +47,7 @@ function buy_click(){
             method: 'post',
             url: '/tradelist/buy',        
             data: {        
-                coin : 'AIP',
+                coin : 'KBH',
                 NowPrice : buyNowPrice,
                 buyQuantity : buyQuantity,
                 buyAmount: buyAmount,
@@ -58,7 +58,8 @@ function buy_click(){
             location.href='/userlist';
         }                              
         else{
-            location.href='/error';
+            // location.href='/error';
+            alert(res.data.message);
         }
     }).catch( (error )=> {
         document.getElementById("result").innerText = `${error.response.status} 에러\n ${error.response.data.message}`;

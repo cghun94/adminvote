@@ -34,8 +34,10 @@ router.post('/userlist/userAsset', userlist_controller.postUserAsset);
 //trade page
 router.get('/tradelist', trade_controller.getTradelist);
 router.get('/tradelist/aip', trade_controller.getAIP);
+router.get('/tradelist/kbh', trade_controller.getKBH);
 
-router.post('/tradelist/aip', trade_controller.postAIP);
+router.post('/tradelist/buy', trade_controller.postBuy);
+
 //sign up
 router.get('/signup', signup_controller.getSignup);
 
